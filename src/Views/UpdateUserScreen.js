@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, SafeAreaView, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import React from "react";
 import { w, h } from "react-native-responsiveness";
 import { screenBg, stopColor } from "../AppColors";
@@ -6,12 +13,21 @@ import CustomInput from "../Components/CustomInput";
 import CustomLoginUser from "../Components/CustomLoginUser";
 import CustomPaswdInput from "../Components/CustomPaswdInput";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
-const AddUserScreen = ({ navigation }) => {
+import { Entypo } from "@expo/vector-icons";
+const UpdateUserScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.introdiv}>
-        <Text style={styles.heading}>New User</Text>
-        <Text style={styles.desc}>Fill in all the fields below</Text>
+        <Text style={styles.heading}>User Details</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+            console.log("clicked");
+          }}
+          style={styles.backbtn}
+        >
+          <Entypo name="chevron-left" size={h("5%")} color="black" />
+        </TouchableOpacity>
       </View>
       <View style={styles.inputs}>
         <View>
@@ -39,13 +55,18 @@ const AddUserScreen = ({ navigation }) => {
 
           <CustomLoginUser title="User" />
         </View>
-        <CustomAuthBtn title="Add" onClick={() => console.log("done")} />
+        <CustomAuthBtn title="Update" onClick={() => console.log("done")} />
+        <CustomAuthBtn
+          bgColor={stopColor}
+          title="Delete"
+          onClick={() => console.log("done")}
+        />
       </View>
     </SafeAreaView>
   );
 };
 
-export default AddUserScreen;
+export default UpdateUserScreen;
 
 const styles = StyleSheet.create({
   mainDiv: {
@@ -72,15 +93,28 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   introdiv: {
-    width: "100%",
+    width: "90%",
     height: "15%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    alignSelf: "center",
     flexDirection: "column",
+    position: "relative",
   },
   desc: {
     fontSize: h("2.2%"),
     textAlign: "center",
+  },
+  backbtn: {
+    height: "100%",
+    width: h("5.5%"),
+    position: "absolute",
+    top: 0,
+    left: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
   },
 });

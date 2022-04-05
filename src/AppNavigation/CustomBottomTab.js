@@ -13,6 +13,8 @@ import {
   MaterialIcons,
   AntDesign,
 } from "@expo/vector-icons";
+import { TouchableOpacity, View, Text } from "react-native";
+import { w, h } from "react-native-responsiveness";
 const Tab = createBottomTabNavigator();
 
 import { inputBg, mainColor, screenBg } from "../AppColors";
@@ -35,6 +37,8 @@ const CustomBottomTab = () => {
         },
         tabBarActiveTintColor: screenBg,
         headerShown: false,
+        tabBarShowLabel: false,
+
         tabBarInactiveTintColor: "lightgrey",
       }}
     >
@@ -42,10 +46,30 @@ const CustomBottomTab = () => {
         name="Timer"
         component={TimerScreen}
         options={{
-          tabBarLabel: "Timer",
-          tabBarShowLabel: true,
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="timer" color={color} size={size} />
+          tabBarIcon: ({ color, focused }) => (
+            <View
+              style={{
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                position: "relative",
+              }}
+            >
+              <MaterialIcons name="timer" color={color} size={h("2.5%")} />
+              <Text style={{ color: color }}>Timer</Text>
+              <View
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: 7,
+                  backgroundColor: focused ? screenBg : mainColor,
+                  position: "absolute",
+                  bottom: -4,
+                }}
+              />
+            </View>
           ),
         }}
       />
@@ -53,10 +77,30 @@ const CustomBottomTab = () => {
         name="Activity"
         component={ActivityScreen}
         options={{
-          tabBarLabel: "Activity",
-          tabBarShowLabel: true,
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="filetext1" color={color} size={size} />
+          tabBarIcon: ({ color, focused }) => (
+            <View
+              style={{
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                position: "relative",
+              }}
+            >
+              <AntDesign name="filetext1" color={color} size={h("2.5%")} />
+              <Text style={{ color: color }}>Activity</Text>
+              <View
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: 7,
+                  backgroundColor: focused ? screenBg : mainColor,
+                  position: "absolute",
+                  bottom: -4,
+                }}
+              />
+            </View>
           ),
         }}
       />

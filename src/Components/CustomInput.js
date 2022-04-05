@@ -6,8 +6,17 @@ import { w, h } from "react-native-responsiveness";
 const CustomInput = ({ iconName }) => {
   return (
     <View style={styles.customInptdiv}>
-      <Feather name={`${iconName}`} size={h("3%")} color={mainColor} />
-      <TextInput style={styles.custminp} placeholder="enter paswword" />
+      {iconName && (
+        <Feather name={`${iconName}`} size={h("3%")} color={mainColor} />
+      )}
+      <TextInput
+        style={{
+          ...styles.custminp,
+          width: iconName ? "86%" : "100%",
+          paddingHorizontal: iconName ? 0 : 10,
+        }}
+        placeholder="enter paswword"
+      />
     </View>
   );
 };
@@ -16,7 +25,7 @@ export default CustomInput;
 
 const styles = StyleSheet.create({
   customInptdiv: {
-    width: w("90%"),
+    width: w("88%"),
     borderRadius: h("1%"),
     backgroundColor: inputBg,
     height: h("6%"),
@@ -27,7 +36,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   custminp: {
-    width: "86%",
     height: "100%",
     backgroundColor: "transparent",
   },

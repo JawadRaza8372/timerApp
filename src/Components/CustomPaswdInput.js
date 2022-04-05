@@ -13,9 +13,11 @@ const CustomPaswdInput = ({ iconName }) => {
   const [showPaswd, setshowPaswd] = useState(true);
   return (
     <View style={styles.customInptdiv}>
-      <Feather name={`${iconName}`} size={h("3%")} color={mainColor} />
+      {iconName && (
+        <Feather name={`${iconName}`} size={h("3%")} color={mainColor} />
+      )}
       <TextInput
-        style={styles.custminp}
+        style={{ ...styles.custminp, width: iconName ? "76%" : "86%" }}
         placeholder="enter paswword"
         secureTextEntry={showPaswd}
       />
@@ -37,7 +39,7 @@ export default CustomPaswdInput;
 
 const styles = StyleSheet.create({
   customInptdiv: {
-    width: w("90%"),
+    width: w("88%"),
     backgroundColor: inputBg,
     borderRadius: h("1%"),
     height: h("6%"),
@@ -48,7 +50,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   custminp: {
-    width: "76%",
     height: "100%",
     backgroundColor: "transparent",
   },

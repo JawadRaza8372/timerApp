@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   desc: {
-    fontSize: h("2.5%"),
+    fontSize: h("2.2%"),
     textAlign: "center",
   },
   inputs: {
