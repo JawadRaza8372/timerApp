@@ -194,7 +194,8 @@ const styles = StyleSheet.create({
   labl: {
     marginBottom: h("1%"),
     marginLeft: h("1.3%"),
-    fontSize: h("2.5%"),
+    fontSize: h("2.3%"),
+    fontWeight: "500",
   },
   inputfild: {
     width: "95%",

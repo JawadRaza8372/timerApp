@@ -11,42 +11,47 @@ import CustomPaswdInput from "./CustomPaswdInput";
 import { w, h } from "react-native-responsiveness";
 import CustomAuthBtn from "./CustomAuthBtn";
 import { inputBg, mainColor } from "../AppColors";
+import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
 const AuthUserComp = ({ onSubmit }) => {
   const [isRemember, setisRemember] = useState(false);
   return (
-    <>
-      <View style={styles.introdiv}>
-        <Text style={styles.heading}>Login</Text>
-        <Text style={styles.desc}>Log in to access to your timer</Text>
+    <KeyboardAwareScrollView>
+      <View style={styles.logindivv}>
+        <View style={styles.introdiv}>
+          <Text style={styles.heading}>Login</Text>
+          <Text style={styles.desc}>Log in to access to your timer</Text>
+        </View>
+        <View style={styles.inputs}>
+          <View>
+            <Text style={styles.labl}>Email</Text>
+            <CustomInput iconName="email" />
+          </View>
+          <View>
+            <Text style={styles.labl}>Password</Text>
+            <CustomPaswdInput iconName="lock" />
+          </View>
+          <View style={styles.btnsDiv}>
+            <TouchableOpacity
+              style={styles.remberbtn}
+              onPress={() => setisRemember(!isRemember)}
+            >
+              <View
+                style={
+                  isRemember
+                    ? [styles.emptybox, styles.active]
+                    : styles.emptybox
+                }
+              />
+              <Text>Remember me</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.forgtBtn}>
+              <Text>Forgot Your Password</Text>
+            </TouchableOpacity>
+          </View>
+          <CustomAuthBtn title="Login" onClick={onSubmit} />
+        </View>
       </View>
-      <View style={styles.inputs}>
-        <View>
-          <Text style={styles.labl}>Email</Text>
-          <CustomInput iconName="mail" />
-        </View>
-        <View>
-          <Text style={styles.labl}>Password</Text>
-          <CustomPaswdInput iconName="lock" />
-        </View>
-        <View style={styles.btnsDiv}>
-          <TouchableOpacity
-            style={styles.remberbtn}
-            onPress={() => setisRemember(!isRemember)}
-          >
-            <View
-              style={
-                isRemember ? [styles.emptybox, styles.active] : styles.emptybox
-              }
-            />
-            <Text>Remember me</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.forgtBtn}>
-            <Text>Forgot Your Password</Text>
-          </TouchableOpacity>
-        </View>
-        <CustomAuthBtn title="Login" onClick={onSubmit} />
-      </View>
-    </>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -64,7 +69,14 @@ const styles = StyleSheet.create({
   },
   inputs: {
     width: w("95%"),
-    height: "45%",
+    height: "55%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    flexDirection: "column",
+  },
+  logindivv: {
+    height: h("90%"),
     display: "flex",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -102,6 +114,8 @@ const styles = StyleSheet.create({
   },
   labl: {
     marginBottom: h("1%"),
+    fontSize: h("2.3%"),
+    fontWeight: "500",
   },
   introdiv: {
     width: "100%",

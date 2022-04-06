@@ -116,4 +116,9 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: "capitalize",
   },
+  labl: {
+    marginBottom: h("1%"),
+    fontSize: h("2.3%"),
+    fontWeight: "500",
+  },
 });

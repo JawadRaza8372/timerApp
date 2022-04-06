@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 import { w, h } from "react-native-responsiveness";
@@ -13,6 +14,7 @@ import CustomInput from "../Components/CustomInput";
 import { Entypo } from "@expo/vector-icons";
 import CustomModel from "../Components/CustomModel";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
+import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
 const TaskSettings = ({ navigation }) => {
   const [openModel, setopenModel] = useState(false);
   const toggleModelf = () => {
@@ -22,47 +24,57 @@ const TaskSettings = ({ navigation }) => {
     <>
       <SafeAreaView style={styles.mainDiv}>
         <Text style={styles.heading}>Parameters</Text>
-        <View style={styles.filldiv}>
-          <View style={styles.inputs}>
-            <Text style={styles.litheadig}>Tasks</Text>
-            <View style={styles.tasksCont}>
-              <View style={styles.tasks}>
-                <Text>Working</Text>
+        <KeyboardAwareScrollView>
+          <View style={styles.filldiv}>
+            <View style={styles.inputs}>
+              <Text style={styles.litheadig}>Tasks</Text>
+              <View style={styles.tasksCont}>
+                <TouchableOpacity onPress={toggleModelf} style={styles.tasks}>
+                  <Text>Working</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={toggleModelf} style={styles.tasks}>
+                  <Text>Break</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={toggleModelf}
+                  style={styles.addtasks}
+                >
+                  <TextInput
+                    placeholder="Enter New Task"
+                    style={styles.myinput}
+                  />
+                  <TouchableOpacity style={styles.addbtnn}>
+                    <Entypo name="plus" size={24} color="black" />
+                  </TouchableOpacity>
+                </TouchableOpacity>
               </View>
-              <View style={styles.tasks}>
-                <Text>Break</Text>
-              </View>
-              <TouchableOpacity onPress={toggleModelf} style={styles.addtasks}>
-                <Text>Add A New Task</Text>
-                <Entypo name="plus" size={24} color="black" />
-              </TouchableOpacity>
-            </View>
-            <View>
-              <Text style={styles.litheadig}>Last Name</Text>
+              <View>
+                <Text style={styles.litheadig}>Last Name</Text>
 
-              <CustomInput />
-            </View>
-          </View>
-          <View style={styles.subscriptiondiv}>
-            <Text style={styles.litheadig}>
-              Informations about your subscription
-            </Text>
-            <View style={styles.contentDiv}>
-              <View style={{ width: "100%" }}>
-                <View style={styles.tasks}>
-                  <Text>Your subscription is active</Text>
-                </View>
-                <View style={styles.tasks}>
-                  <Text>Number of users : 9/10</Text>
-                </View>
-                <View style={styles.tasks}>
-                  <Text>Your role : Administrator (Manager)</Text>
-                </View>
+                <CustomInput />
               </View>
-              <CustomAuthBtn title={"Change Subscription"} />
+            </View>
+            <View style={styles.subscriptiondiv}>
+              <Text style={styles.litheadig}>
+                Informations about your subscription
+              </Text>
+              <View style={styles.contentDiv}>
+                <View style={{ width: "100%" }}>
+                  <View style={styles.tasks}>
+                    <Text>Your subscription is active</Text>
+                  </View>
+                  <View style={styles.tasks}>
+                    <Text>Number of users : 9/10</Text>
+                  </View>
+                  <View style={styles.tasks}>
+                    <Text>Your role : Administrator (Manager)</Text>
+                  </View>
+                </View>
+                <CustomAuthBtn title={"Change Subscription"} />
+              </View>
             </View>
           </View>
-        </View>
+        </KeyboardAwareScrollView>
       </SafeAreaView>
       <CustomModel show={openModel} toggleModal={toggleModelf}>
         <View style={styles.modelDiv}>
@@ -119,8 +131,7 @@ const styles = StyleSheet.create({
   inputs: {
     width: w("95%"),
     alignSelf: "center",
-    flex: 1,
-    // backgroundColor: "red",
+    height: h("50%"),
     // display: "flex",
     // alignItems: "center",
     // justifyContent: "space-evenly",
@@ -208,5 +219,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
+  },
+  myinput: {
+    flex: 1,
+    height: "100%",
+  },
+  addbtnn: {
+    width: w("10%"),
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

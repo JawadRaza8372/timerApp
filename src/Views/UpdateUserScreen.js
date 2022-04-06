@@ -14,6 +14,7 @@ import CustomLoginUser from "../Components/CustomLoginUser";
 import CustomPaswdInput from "../Components/CustomPaswdInput";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { Entypo } from "@expo/vector-icons";
+import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
 const UpdateUserScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.mainDiv}>
@@ -29,39 +30,42 @@ const UpdateUserScreen = ({ navigation }) => {
           <Entypo name="chevron-left" size={h("5%")} color="black" />
         </TouchableOpacity>
       </View>
-      <View style={styles.inputs}>
-        <View>
-          <Text style={styles.labl}>Last Name</Text>
+      <KeyboardAwareScrollView>
+        <View style={styles.inputs}>
+          <View>
+            <Text style={styles.labl}>Role</Text>
 
-          <CustomInput />
-        </View>
-        <View>
-          <Text style={styles.labl}>First Name</Text>
+            <CustomLoginUser title="User" />
+          </View>
+          <View>
+            <Text style={styles.labl}>Last Name</Text>
 
-          <CustomInput />
-        </View>
-        <View>
-          <Text style={styles.labl}>Email</Text>
+            <CustomInput />
+          </View>
+          <View>
+            <Text style={styles.labl}>First Name</Text>
 
-          <CustomInput />
-        </View>
-        <View>
-          <Text style={styles.labl}>Password</Text>
+            <CustomInput />
+          </View>
+          <View>
+            <Text style={styles.labl}>Email</Text>
 
-          <CustomPaswdInput />
-        </View>
-        <View>
-          <Text style={styles.labl}>Role</Text>
+            <CustomInput />
+          </View>
+          <View>
+            <Text style={styles.labl}>Password</Text>
 
-          <CustomLoginUser title="User" />
+            <CustomPaswdInput />
+          </View>
+
+          <CustomAuthBtn title="Update" onClick={() => console.log("done")} />
+          <CustomAuthBtn
+            bgColor={stopColor}
+            title="Delete"
+            onClick={() => console.log("done")}
+          />
         </View>
-        <CustomAuthBtn title="Update" onClick={() => console.log("done")} />
-        <CustomAuthBtn
-          bgColor={stopColor}
-          title="Delete"
-          onClick={() => console.log("done")}
-        />
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -82,11 +86,13 @@ const styles = StyleSheet.create({
   },
   labl: {
     marginBottom: h("1%"),
+    fontSize: h("2.3%"),
+    fontWeight: "500",
   },
   inputs: {
-    width: w("95%"),
+    width: w("80%"),
     alignSelf: "center",
-    height: "80%",
+    height: h("80%"),
     display: "flex",
     alignItems: "center",
     justifyContent: "space-evenly",

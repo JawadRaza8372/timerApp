@@ -1,13 +1,13 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Zocial } from "@expo/vector-icons";
 import { inputBg, mainColor } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
 const CustomInput = ({ iconName }) => {
   return (
     <View style={styles.customInptdiv}>
       {iconName && (
-        <Feather name={`${iconName}`} size={h("3%")} color={mainColor} />
+        <Zocial name={`${iconName}`} size={h("3%")} color={mainColor} />
       )}
       <TextInput
         style={{

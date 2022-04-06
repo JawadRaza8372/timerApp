@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { inputBg, mainColor } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
 const CustomPaswdInput = ({ iconName }) => {
@@ -14,7 +14,11 @@ const CustomPaswdInput = ({ iconName }) => {
   return (
     <View style={styles.customInptdiv}>
       {iconName && (
-        <Feather name={`${iconName}`} size={h("3%")} color={mainColor} />
+        <MaterialCommunityIcons
+          name={`${iconName}`}
+          size={h("3%")}
+          color={mainColor}
+        />
       )}
       <TextInput
         style={{ ...styles.custminp, width: iconName ? "76%" : "86%" }}

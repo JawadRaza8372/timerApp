@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { inputBg, mainColor } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
 const CustomPaswdText = ({ iconName, text }) => {
@@ -14,7 +14,11 @@ const CustomPaswdText = ({ iconName, text }) => {
   const hashtext = "****************************************";
   return (
     <View style={styles.customInptdiv}>
-      <Feather name={`${iconName}`} size={h("3%")} color={mainColor} />
+      <MaterialCommunityIcons
+        name={`${iconName}`}
+        size={h("3%")}
+        color={mainColor}
+      />
       <Text style={styles.custminp}>
         {ishidden ? hashtext.slice(0, text.length) : text}
       </Text>

@@ -33,8 +33,9 @@ const AdminActivityScreen = ({ navigation }) => {
           <Entypo name="chevron-left" size={h("5%")} color="black" />
         </TouchableOpacity>
       </View>
-
-      <Text style={styles.username}>Jhon Doe</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("UpdateUserAdmin")}>
+        <Text style={styles.username}>Jhon Doe</Text>
+      </TouchableOpacity>
 
       {/* <Animated.View style={{ width: "100%", height: "30%", ...animatedStyle }}>
         <SvgXml xml={mysvg} width="100%" height="100%" />

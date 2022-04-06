@@ -6,6 +6,7 @@ import CustomInput from "../Components/CustomInput";
 import CustomLoginUser from "../Components/CustomLoginUser";
 import CustomPaswdInput from "../Components/CustomPaswdInput";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
+import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
 const AddUserScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.mainDiv}>
@@ -13,34 +14,38 @@ const AddUserScreen = ({ navigation }) => {
         <Text style={styles.heading}>New User</Text>
         <Text style={styles.desc}>Fill in all the fields below</Text>
       </View>
-      <View style={styles.inputs}>
-        <View>
-          <Text style={styles.labl}>Last Name</Text>
+      <KeyboardAwareScrollView>
+        <View style={styles.inputs}>
+          <View>
+            <Text style={styles.labl}>Role</Text>
 
-          <CustomInput />
-        </View>
-        <View>
-          <Text style={styles.labl}>First Name</Text>
+            <CustomLoginUser title="User" />
+          </View>
+          <View>
+            <Text style={styles.labl}>Last Name</Text>
 
-          <CustomInput />
-        </View>
-        <View>
-          <Text style={styles.labl}>Email</Text>
+            <CustomInput />
+          </View>
+          <View>
+            <Text style={styles.labl}>First Name</Text>
 
-          <CustomInput />
-        </View>
-        <View>
-          <Text style={styles.labl}>Password</Text>
+            <CustomInput />
+          </View>
+          <View>
+            <Text style={styles.labl}>Email</Text>
 
-          <CustomPaswdInput />
-        </View>
-        <View>
-          <Text style={styles.labl}>Role</Text>
+            <CustomInput />
+          </View>
 
-          <CustomLoginUser title="User" />
+          <View>
+            <Text style={styles.labl}>Password</Text>
+
+            <CustomPaswdInput />
+          </View>
+
+          <CustomAuthBtn title="Add" onClick={() => console.log("done")} />
         </View>
-        <CustomAuthBtn title="Add" onClick={() => console.log("done")} />
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -61,11 +66,13 @@ const styles = StyleSheet.create({
   },
   labl: {
     marginBottom: h("1%"),
+    fontSize: h("2.3%"),
+    fontWeight: "500",
   },
   inputs: {
     width: w("95%"),
     alignSelf: "center",
-    height: "80%",
+    height: h("79%"),
     display: "flex",
     alignItems: "center",
     justifyContent: "space-evenly",
