@@ -18,6 +18,11 @@ export default function MyStackNavig() {
 
         <Stack.Screen
           name="Client"
+          component={CustomBottomTab}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Admin"
           component={CustomBottomTabAdmin}
           options={{ headerShown: false }}
         />

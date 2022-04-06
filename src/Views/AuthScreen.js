@@ -5,16 +5,16 @@ import AuthUserComp from "../Components/AuthUserComp";
 import AuthAdminComp from "../Components/AuthAdminComp";
 
 const AuthScreen = ({ navigation }) => {
-  const [isAdminlayout, setisAdminlayout] = useState(true);
+  const [isClientLayout, setisClientLayout] = useState(true);
   return (
     <SafeAreaView style={styles.mainDiv}>
-      {isAdminlayout ? (
+      {isClientLayout ? (
         <AuthAdminComp
-          onOther={() => setisAdminlayout(false)}
+          onOther={() => setisClientLayout(!isClientLayout)}
           onSubmit={() => navigation.navigate("Client")}
         />
       ) : (
-        <AuthUserComp onSubmit={() => navigation.navigate("Client")} />
+        <AuthUserComp onSubmit={() => navigation.navigate("Admin")} />
       )}
     </SafeAreaView>
   );
