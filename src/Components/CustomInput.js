@@ -3,7 +3,7 @@ import React from "react";
 import { Feather, Zocial } from "@expo/vector-icons";
 import { inputBg, mainColor } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
-const CustomInput = ({ iconName }) => {
+const CustomInput = ({ iconName, placeholder }) => {
   return (
     <View style={styles.customInptdiv}>
       {iconName && (
@@ -15,7 +15,7 @@ const CustomInput = ({ iconName }) => {
           width: iconName ? "86%" : "100%",
           paddingHorizontal: iconName ? 0 : 10,
         }}
-        placeholder="enter paswword"
+        placeholder={`${placeholder}`}
       />
     </View>
   );

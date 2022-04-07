@@ -24,17 +24,17 @@ const AddUserScreen = ({ navigation }) => {
           <View>
             <Text style={styles.labl}>Last Name</Text>
 
-            <CustomInput />
+            <CustomInput placeholder="Doe" />
           </View>
           <View>
             <Text style={styles.labl}>First Name</Text>
 
-            <CustomInput />
+            <CustomInput placeholder="Jhon" />
           </View>
           <View>
             <Text style={styles.labl}>Email</Text>
 
-            <CustomInput />
+            <CustomInput placeholder="email@example.com" />
           </View>
 
           <View>

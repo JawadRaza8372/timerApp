@@ -22,7 +22,7 @@ const CustomPaswdInput = ({ iconName }) => {
       )}
       <TextInput
         style={{ ...styles.custminp, width: iconName ? "76%" : "86%" }}
-        placeholder="enter paswword"
+        placeholder="********"
         secureTextEntry={showPaswd}
       />
       <TouchableOpacity

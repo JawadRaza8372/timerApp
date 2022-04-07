@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { w, h } from "react-native-responsiveness";
-import { inputBg, screenBg } from "../AppColors";
+import { inputBg, screenBg, mainColor } from "../AppColors";
 import CustomInput from "../Components/CustomInput";
 import { Entypo } from "@expo/vector-icons";
 import CustomModel from "../Components/CustomModel";
@@ -17,6 +17,7 @@ import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
 const TaskSettings = ({ navigation }) => {
   const [openModel, setopenModel] = useState(false);
+  const [isRemember, setisRemember] = useState(false);
   const toggleModelf = () => {
     setopenModel(!openModel);
   };
@@ -49,9 +50,9 @@ const TaskSettings = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
               <View>
-                <Text style={styles.litheadig}>Last Name</Text>
+                <Text style={styles.litheadig}>Email</Text>
 
-                <CustomInput />
+                <CustomInput placeholder="email@example.com" />
               </View>
             </View>
             <View style={styles.subscriptiondiv}>
@@ -85,9 +86,24 @@ const TaskSettings = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <View>
-            <Text style={styles.litheadig}>Last Name</Text>
+            <Text style={styles.litheadig}>Task</Text>
 
-            <CustomInput />
+            <CustomInput placeholder={"Working"} />
+          </View>
+          <View style={styles.btnsDiv}>
+            <TouchableOpacity
+              style={styles.remberbtn}
+              onPress={() => setisRemember(!isRemember)}
+            >
+              <View
+                style={
+                  isRemember
+                    ? [styles.emptybox, styles.active]
+                    : styles.emptybox
+                }
+              />
+              <Text>is Working</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.btndiv}>
@@ -231,4 +247,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  btnsDiv: {
+    width: "100%",
+    height: h("6%"),
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+  },
+  remberbtn: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  emptybox: {
+    width: h("2%"),
+    height: h("2%"),
+    borderRadius: h("4%"),
+    backgroundColor: inputBg,
+    overflow: "hidden",
+    marginRight: h("1%"),
+  },
+  active: { backgroundColor: mainColor },
 });

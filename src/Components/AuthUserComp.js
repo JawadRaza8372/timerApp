@@ -24,7 +24,7 @@ const AuthUserComp = ({ onSubmit }) => {
         <View style={styles.inputs}>
           <View>
             <Text style={styles.labl}>Email</Text>
-            <CustomInput iconName="email" />
+            <CustomInput iconName="email" placeholder="email@example.com" />
           </View>
           <View>
             <Text style={styles.labl}>Password</Text>
