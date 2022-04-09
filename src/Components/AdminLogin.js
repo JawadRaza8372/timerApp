@@ -12,8 +12,9 @@ import { w, h } from "react-native-responsiveness";
 import CustomAuthBtn from "./CustomAuthBtn";
 import { inputBg, mainColor } from "../AppColors";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
-const AuthUserComp = ({ onSubmit }) => {
+const AdminLogin = ({ onSubmit }) => {
   const [isRemember, setisRemember] = useState(false);
+  const [formSubmit, setformSubmit] = useState({ email: "", password: "" });
   return (
     <KeyboardAwareScrollView>
       <View style={styles.logindivv}>
@@ -24,11 +25,34 @@ const AuthUserComp = ({ onSubmit }) => {
         <View style={styles.inputs}>
           <View>
             <Text style={styles.labl}>Email</Text>
-            <CustomInput iconName="email" placeholder="email@example.com" />
+            <CustomInput
+              iconName="email"
+              placeholder="email@example.com"
+              value={formSubmit.email}
+              onChange={(text) =>
+                setformSubmit((prevalue) => {
+                  return {
+                    ...prevalue,
+                    email: text,
+                  };
+                })
+              }
+            />
           </View>
           <View>
             <Text style={styles.labl}>Password</Text>
-            <CustomPaswdInput iconName="lock" />
+            <CustomPaswdInput
+              iconName="lock"
+              value={formSubmit.password}
+              onChange={(text) =>
+                setformSubmit((prevalue) => {
+                  return {
+                    ...prevalue,
+                    password: text,
+                  };
+                })
+              }
+            />
           </View>
           <View style={styles.btnsDiv}>
             <TouchableOpacity
@@ -45,17 +69,17 @@ const AuthUserComp = ({ onSubmit }) => {
               <Text>Remember me</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.forgtBtn}>
-              <Text>Forgot Your Password</Text>
+              <Text style={{ color: mainColor }}>Forgot Your Password</Text>
             </TouchableOpacity>
           </View>
-          <CustomAuthBtn title="Login" onClick={onSubmit} />
+          <CustomAuthBtn title="Login" onClick={() => onSubmit(formSubmit)} />
         </View>
       </View>
     </KeyboardAwareScrollView>
   );
 };
 
-export default AuthUserComp;
+export default AdminLogin;
 
 const styles = StyleSheet.create({
   heading: {
@@ -92,8 +116,9 @@ const styles = StyleSheet.create({
   },
   active: { backgroundColor: mainColor },
   btnsDiv: {
-    width: "100%",
+    width: w("88%"),
     height: h("6%"),
+    alignSelf: "center",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",

@@ -1,20 +1,28 @@
 import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import { screenBg } from "../AppColors";
-import AuthUserComp from "../Components/AuthUserComp";
-import AuthAdminComp from "../Components/AuthAdminComp";
+import AdminLogin from "../Components/AdminLogin";
+import EmployLogin from "../Components/EmployLogin";
 
 const AuthScreen = ({ navigation }) => {
   const [isClientLayout, setisClientLayout] = useState(true);
   return (
     <SafeAreaView style={styles.mainDiv}>
       {isClientLayout ? (
-        <AuthAdminComp
+        <EmployLogin
           onOther={() => setisClientLayout(!isClientLayout)}
-          onSubmit={() => navigation.navigate("Client")}
+          onSubmit={(data) => {
+            console.log(data);
+            navigation.navigate("Client");
+          }}
         />
       ) : (
-        <AuthUserComp onSubmit={() => navigation.navigate("Admin")} />
+        <AdminLogin
+          onSubmit={(data) => {
+            console.log(data);
+            navigation.navigate("Admin");
+          }}
+        />
       )}
     </SafeAreaView>
   );

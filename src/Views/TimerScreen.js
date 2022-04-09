@@ -7,6 +7,7 @@ import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { w, h } from "react-native-responsiveness";
 import { Feather } from "@expo/vector-icons";
 import CustomModel from "../Components/CustomModel";
+import AnimatedTimeComp from "../Components/AnimatedTimeComp";
 const TimerScreen = ({ navigation }) => {
   const [ismodal, setismodal] = useState(false);
   return (
@@ -22,7 +23,7 @@ const TimerScreen = ({ navigation }) => {
       <View style={styles.activitysel}>
         <CustomLoginUser title={"Working"} istimer={true} />
       </View>
-      <CircleTimer
+      {/* <CircleTimer
         radius={80}
         borderWidth={10}
         seconds={1000}
@@ -32,7 +33,8 @@ const TimerScreen = ({ navigation }) => {
           console.log("Timer Finished!");
         }}
         showSecond={false}
-      />
+      /> */}
+      <AnimatedTimeComp />
       <View style={styles.activitysel}>
         <CustomAuthBtn
           istimer={true}

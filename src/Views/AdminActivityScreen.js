@@ -37,10 +37,6 @@ const AdminActivityScreen = ({ navigation }) => {
         <Text style={styles.username}>Jhon Doe</Text>
       </TouchableOpacity>
 
-      {/* <Animated.View style={{ width: "100%", height: "30%", ...animatedStyle }}>
-        <SvgXml xml={mysvg} width="100%" height="100%" />
-      </Animated.View> */}
-
       <FlatList
         data={mydat}
         keyExtractor={(item) => item.key}

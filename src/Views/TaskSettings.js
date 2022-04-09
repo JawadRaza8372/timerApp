@@ -15,6 +15,7 @@ import { Entypo } from "@expo/vector-icons";
 import CustomModel from "../Components/CustomModel";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
+import CustomLoginUser from "../Components/CustomLoginUser";
 const TaskSettings = ({ navigation }) => {
   const [openModel, setopenModel] = useState(false);
   const [isRemember, setisRemember] = useState(false);
@@ -53,6 +54,10 @@ const TaskSettings = ({ navigation }) => {
                 <Text style={styles.litheadig}>Email</Text>
 
                 <CustomInput placeholder="email@example.com" />
+              </View>
+              <View>
+                <Text style={styles.litheadig}>Default Login Page</Text>
+                <CustomLoginUser title={"Kiosk"} />
               </View>
             </View>
             <View style={styles.subscriptiondiv}>

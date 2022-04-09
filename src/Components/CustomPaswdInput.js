@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { inputBg, mainColor } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
-const CustomPaswdInput = ({ iconName }) => {
+const CustomPaswdInput = ({ iconName, value, onChange }) => {
   const [showPaswd, setshowPaswd] = useState(true);
   return (
     <View style={styles.customInptdiv}>
@@ -24,6 +24,8 @@ const CustomPaswdInput = ({ iconName }) => {
         style={{ ...styles.custminp, width: iconName ? "76%" : "86%" }}
         placeholder="********"
         secureTextEntry={showPaswd}
+        value={value}
+        onChangeText={onChange}
       />
       <TouchableOpacity
         style={styles.inpBtn}

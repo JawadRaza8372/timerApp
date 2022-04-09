@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, FlatList } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { w, h } from "react-native-responsiveness";
 import { screenBg, stopColor } from "../AppColors";
 import CustomInput from "../Components/CustomInput";
@@ -8,6 +8,13 @@ import CustomPaswdInput from "../Components/CustomPaswdInput";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
 const AddUserScreen = ({ navigation }) => {
+  const [formData, setformData] = useState({
+    Role: "User",
+    lastName: "",
+    firstName: "",
+    email: "",
+    password: "",
+  });
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.introdiv}>
@@ -19,31 +26,91 @@ const AddUserScreen = ({ navigation }) => {
           <View>
             <Text style={styles.labl}>Role</Text>
 
-            <CustomLoginUser title="User" />
+            <CustomLoginUser
+              title={formData.Role}
+              myData={[
+                { title: "Admin (Manager)", value: "Admin (Manager)" },
+                { title: "Employe", value: "Employe" },
+              ]}
+              selectionFun={(dat) =>
+                setformData((prevalue) => {
+                  return {
+                    ...prevalue,
+                    Role: dat,
+                  };
+                })
+              }
+            />
           </View>
           <View>
             <Text style={styles.labl}>Last Name</Text>
 
-            <CustomInput placeholder="Doe" />
+            <CustomInput
+              placeholder="Doe"
+              value={formData.lastName}
+              onChange={(text) =>
+                setformData((prevalue) => {
+                  return {
+                    ...prevalue,
+                    lastName: text,
+                  };
+                })
+              }
+            />
           </View>
           <View>
             <Text style={styles.labl}>First Name</Text>
 
-            <CustomInput placeholder="Jhon" />
+            <CustomInput
+              placeholder="Jhon"
+              value={formData.firstName}
+              onChange={(text) =>
+                setformData((prevalue) => {
+                  return {
+                    ...prevalue,
+                    firstName: text,
+                  };
+                })
+              }
+            />
           </View>
           <View>
             <Text style={styles.labl}>Email</Text>
 
-            <CustomInput placeholder="email@example.com" />
+            <CustomInput
+              placeholder="email@example.com"
+              value={formData.email}
+              onChange={(text) =>
+                setformData((prevalue) => {
+                  return {
+                    ...prevalue,
+                    email: text,
+                  };
+                })
+              }
+            />
           </View>
 
           <View>
             <Text style={styles.labl}>Password</Text>
 
-            <CustomPaswdInput />
+            <CustomPaswdInput
+              value={formData.password}
+              onChange={(text) =>
+                setformData((prevalue) => {
+                  return {
+                    ...prevalue,
+                    password: text,
+                  };
+                })
+              }
+            />
           </View>
 
-          <CustomAuthBtn title="Add" onClick={() => console.log("done")} />
+          <CustomAuthBtn
+            title="Add"
+            onClick={() => console.log("done", formData)}
+          />
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>

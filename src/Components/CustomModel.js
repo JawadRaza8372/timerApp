@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Modal } from "react-native";
+import { StyleSheet, Text, View, Modal, TouchableOpacity } from "react-native";
 import React from "react";
 
 const CustomModel = ({ show, toggleModal, children }) => {
@@ -9,7 +9,17 @@ const CustomModel = ({ show, toggleModal, children }) => {
       visible={show}
       onRequestClose={toggleModal}
     >
-      <View style={styles.bgdiv}>{children}</View>
+      <View style={styles.bgdiv}>
+        <TouchableOpacity
+          onPress={toggleModal}
+          style={{ width: "100%", flex: 1 }}
+        />
+        {children}
+        <TouchableOpacity
+          onPress={toggleModal}
+          style={{ width: "100%", flex: 1 }}
+        />
+      </View>
     </Modal>
   );
 };
