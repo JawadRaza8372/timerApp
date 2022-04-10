@@ -63,7 +63,10 @@ const CustomLoginUser = ({ istimer, title, myData, selectionFun }) => {
             {myData &&
               myData.map((item, index) => (
                 <TouchableOpacity
-                  onPress={() => selectionFun(item.value)}
+                  onPress={() => {
+                    selectionFun(item.value);
+                    setshowDrop(!showDrop);
+                  }}
                   key={index}
                   style={styles.activityinfo}
                 >

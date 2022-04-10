@@ -7,14 +7,36 @@ import CustomLoginUser from "../Components/CustomLoginUser";
 import CustomPaswdInput from "../Components/CustomPaswdInput";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
+import { useSelector } from "react-redux";
+import { db } from "../DataBase/Configer";
 const AddUserScreen = ({ navigation }) => {
+  const { isAuth } = useSelector((state) => state.auth);
   const [formData, setformData] = useState({
     Role: "User",
     lastName: "",
     firstName: "",
     email: "",
     password: "",
+    addBy: isAuth.userid,
   });
+  const adduserfun = async () => {
+    formData;
+    await db
+      .collection("authSystem")
+      .add(formData)
+      .then((dat) => {
+        console.log(dat.id);
+        console.log("done");
+      });
+    setformData({
+      Role: "User",
+      lastName: "",
+      firstName: "",
+      email: "",
+      password: "",
+      addBy: isAuth.userid,
+    });
+  };
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.introdiv}>
@@ -107,10 +129,7 @@ const AddUserScreen = ({ navigation }) => {
             />
           </View>
 
-          <CustomAuthBtn
-            title="Add"
-            onClick={() => console.log("done", formData)}
-          />
+          <CustomAuthBtn title="Add" onClick={adduserfun} />
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>

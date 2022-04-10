@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomInput from "./CustomInput";
 import CustomPaswdInput from "./CustomPaswdInput";
 import { w, h } from "react-native-responsiveness";
@@ -14,12 +14,21 @@ import { inputBg, mainColor } from "../AppColors";
 import CustomKeyBtn from "./CustomKeyBtn";
 import CustomLoginUser from "./CustomLoginUser";
 import CustomPaswdText from "./CustomPaswdText";
-
+import { useSelector } from "react-redux";
+import { db } from "../DataBase/Configer";
 const EmployLogin = ({ onSubmit, onOther }) => {
+  const { users } = useSelector((state) => state.project);
+  // console.log(users);
+
   const [formSubmit, setformSubmit] = useState({
     username: "User",
     password: "",
   });
+  useEffect(() => {
+    if (formSubmit.password.length === 5) {
+      onSubmit({ email: formSubmit.username, password: formSubmit.password });
+    }
+  }, [formSubmit]);
   // const [inputpaswd, setinputpaswd] = useState("");
   const btnsArr = [
     {
@@ -28,7 +37,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "1",
+            password: formSubmit.password + "1",
           };
         }),
     },
@@ -38,7 +47,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "2",
+            password: formSubmit.password + "2",
           };
         }),
     },
@@ -48,7 +57,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "3",
+            password: formSubmit.password + "3",
           };
         }),
     },
@@ -58,7 +67,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "4",
+            password: formSubmit.password + "4",
           };
         }),
     },
@@ -68,7 +77,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "5",
+            password: formSubmit.password + "5",
           };
         }),
     },
@@ -78,7 +87,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "6",
+            password: formSubmit.password + "6",
           };
         }),
     },
@@ -88,7 +97,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "7",
+            password: formSubmit.password + "7",
           };
         }),
     },
@@ -98,7 +107,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "8",
+            password: formSubmit.password + "8",
           };
         }),
     },
@@ -108,7 +117,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "9",
+            password: formSubmit.password + "9",
           };
         }),
     },
@@ -119,7 +128,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: formSubmit.password + "0",
+            password: formSubmit.password + "0",
           };
         }),
     },
@@ -129,7 +138,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         setformSubmit((prevalue) => {
           return {
             ...prevalue,
-            username: "",
+            password: "",
           };
         }),
     },
@@ -160,11 +169,7 @@ const EmployLogin = ({ onSubmit, onOther }) => {
           <Text style={styles.labl}>Choose a user</Text>
           <CustomLoginUser
             title={formSubmit.username}
-            myData={[
-              { title: "Jhon", value: "Jhon" },
-              { title: "Willaim", value: "Willaim" },
-              { title: "Henry", value: "Henry" },
-            ]}
+            myData={users}
             selectionFun={(dat) =>
               setformSubmit((prevalue) => {
                 return {

@@ -6,8 +6,9 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { w, h } from "react-native-responsiveness";
 import { inputBg, screenBg, mainColor } from "../AppColors";
 import CustomInput from "../Components/CustomInput";
@@ -15,12 +16,85 @@ import { Entypo } from "@expo/vector-icons";
 import CustomModel from "../Components/CustomModel";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomLoginUser from "../Components/CustomLoginUser";
+import { useDispatch, useSelector } from "react-redux";
+import { setTasks, setLayout } from "../store/projectSlice";
+import { db } from "../DataBase/Configer";
 const TaskSettings = ({ navigation }) => {
   const [openModel, setopenModel] = useState(false);
   const [isRemember, setisRemember] = useState(false);
+  const [lloginLayout, setlloginLayout] = useState("");
+  const { users, tasks, layout } = useSelector((state) => state.project);
+  const { isAuth } = useSelector((state) => state.auth);
+  const [taskAdd, settaskAdd] = useState("");
+  console.log("checkig tasks ", tasks.length);
+  const dispatch = useDispatch();
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("TimerLayout");
+      if (value === "Kiosk") {
+        setlloginLayout(value);
+        dispatch(setLayout({ loginLayout: "Kiosk" }));
+      } else {
+        setlloginLayout("");
+        dispatch(setLayout({ loginLayout: "" }));
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+  const storeData = async () => {
+    try {
+      console.log("thisrun");
+      if (lloginLayout) {
+        dispatch(setLayout({ loginLayout: lloginLayout }));
+      }
+      await AsyncStorage.setItem("TimerLayout", lloginLayout);
+      console.log("thisend");
+    } catch (e) {
+      // saving error
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+  useEffect(() => {
+    storeData();
+  }, [lloginLayout]);
+
   const toggleModelf = () => {
     setopenModel(!openModel);
+  };
+  const addTaskFunction = async () => {
+    await db
+      .collection("TaskMange")
+      .add({
+        Title: taskAdd.charAt(0).toUpperCase() + taskAdd.slice(1),
+        Value: taskAdd.toLowerCase(),
+      })
+      .then((doc) => {
+        console.log(doc.id);
+        settaskAdd("");
+        db.collection("TaskMange")
+          .get()
+          .then((querySnapshot) => {
+            if (querySnapshot.empty) {
+              console.log("notasks");
+            } else {
+              dispatch(
+                setTasks({
+                  tasks: querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    title: doc.data().Title,
+                    value: doc.data().Value,
+                  })),
+                })
+              );
+            }
+          });
+      });
   };
   return (
     <>
@@ -31,54 +105,77 @@ const TaskSettings = ({ navigation }) => {
             <View style={styles.inputs}>
               <Text style={styles.litheadig}>Tasks</Text>
               <View style={styles.tasksCont}>
-                <TouchableOpacity onPress={toggleModelf} style={styles.tasks}>
-                  <Text>Working</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={toggleModelf} style={styles.tasks}>
-                  <Text>Break</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={toggleModelf}
-                  style={styles.addtasks}
-                >
-                  <TextInput
-                    placeholder="Enter New Task"
-                    style={styles.myinput}
-                  />
-                  <TouchableOpacity style={styles.addbtnn}>
-                    <Entypo name="plus" size={24} color="black" />
-                  </TouchableOpacity>
-                </TouchableOpacity>
+                <ScrollView>
+                  {tasks &&
+                    tasks.map((dat) => (
+                      <TouchableOpacity
+                        onPress={toggleModelf}
+                        style={styles.tasks}
+                        key={dat.id}
+                      >
+                        <Text>{dat.title}</Text>
+                      </TouchableOpacity>
+                    ))}
+
+                  <View style={styles.addtasks}>
+                    <TextInput
+                      placeholder="Enter New Task"
+                      style={styles.myinput}
+                      value={taskAdd}
+                      onChangeText={(text) => settaskAdd(text)}
+                    />
+                    <TouchableOpacity
+                      onPress={addTaskFunction}
+                      style={styles.addbtnn}
+                    >
+                      <Entypo name="plus" size={24} color="black" />
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
               </View>
               <View>
                 <Text style={styles.litheadig}>Email</Text>
 
-                <CustomInput placeholder="email@example.com" />
+                <CustomInput
+                  placeholder="email@example.com"
+                  value={isAuth.email}
+                />
               </View>
+              {/* {isAuth.Role === "Admin (Manager)" && ( */}
               <View>
-                <Text style={styles.litheadig}>Default Login Page</Text>
-                <CustomLoginUser title={"Kiosk"} />
+                <Text style={styles.litheadig}>Login Type</Text>
+                <CustomLoginUser
+                  title={lloginLayout === "" ? "Default" : "Kiosk"}
+                  myData={[
+                    { title: "Default", value: "" },
+                    { title: "Kiosk", value: "Kiosk" },
+                  ]}
+                  selectionFun={(dat) => setlloginLayout(dat)}
+                />
               </View>
+              {/* )} */}
             </View>
-            <View style={styles.subscriptiondiv}>
-              <Text style={styles.litheadig}>
-                Informations about your subscription
-              </Text>
-              <View style={styles.contentDiv}>
-                <View style={{ width: "100%" }}>
-                  <View style={styles.tasks}>
-                    <Text>Your subscription is active</Text>
+            {isAuth.Role === "Admin (Manager)" && (
+              <View style={styles.subscriptiondiv}>
+                <Text style={styles.litheadig}>
+                  Informations about your subscription
+                </Text>
+                <View style={styles.contentDiv}>
+                  <View style={{ width: "100%" }}>
+                    <View style={styles.tasks}>
+                      <Text>Your subscription is active</Text>
+                    </View>
+                    <View style={styles.tasks}>
+                      <Text>Number of users : {`${users.length}`}/10</Text>
+                    </View>
+                    <View style={styles.tasks}>
+                      <Text>Your role : {`${isAuth.Role}`}</Text>
+                    </View>
                   </View>
-                  <View style={styles.tasks}>
-                    <Text>Number of users : 9/10</Text>
-                  </View>
-                  <View style={styles.tasks}>
-                    <Text>Your role : Administrator (Manager)</Text>
-                  </View>
+                  <CustomAuthBtn title={"Change Subscription"} />
                 </View>
-                <CustomAuthBtn title={"Change Subscription"} />
               </View>
-            </View>
+            )}
           </View>
         </KeyboardAwareScrollView>
       </SafeAreaView>
@@ -152,7 +249,7 @@ const styles = StyleSheet.create({
   inputs: {
     width: w("95%"),
     alignSelf: "center",
-    height: h("50%"),
+    height: h("49%"),
     // display: "flex",
     // alignItems: "center",
     // justifyContent: "space-evenly",
@@ -167,7 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: h("2%"),
   },
   tasks: {
-    width: "90%",
+    width: w("80%"),
     alignSelf: "center",
     height: h("6%"),
     borderWidth: 0,

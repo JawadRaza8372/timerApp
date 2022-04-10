@@ -3,6 +3,8 @@ import MyStackNavig from "./src/AppNavigation/MyStackNavig";
 import ActivityScreen from "./src/Views/ActivityScreen";
 import AuthScreen from "./src/Views/AuthScreen";
 import TimerScreen from "./src/Views/TimerScreen";
+import { Provider } from "react-redux";
+import { store } from "./src/store";
 export default function App() {
   LogBox.ignoreLogs([
     "Setting a timer",
@@ -40,12 +42,12 @@ export default function App() {
   //     console.log("Error getting documents: ", error);
   //   });
   return (
-    <>
-      <StatusBar />
-      {/* <AuthScreen /> */}
-      {/* <TimerScreen /> */}
-      <MyStackNavig />
-    </>
+    <Provider store={store}>
+      <>
+        <StatusBar />
+        <MyStackNavig />
+      </>
+    </Provider>
   );
 }
 

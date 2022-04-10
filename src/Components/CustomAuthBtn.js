@@ -1,8 +1,20 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState } from "react";
 import { w, h } from "react-native-responsiveness";
 import { mainColor, screenBg } from "../AppColors";
 const CustomAuthBtn = ({ title, bgColor, onClick, istimer }) => {
+  const [isLoadinCheck, setisLoadinCheck] = useState(false);
+  const onClickFun = async () => {
+    setisLoadinCheck(true);
+    await onClick();
+    setisLoadinCheck(false);
+  };
   return (
     <TouchableOpacity
       style={{
@@ -10,9 +22,13 @@ const CustomAuthBtn = ({ title, bgColor, onClick, istimer }) => {
         width: istimer ? "70%" : "75%",
         backgroundColor: bgColor ? bgColor : mainColor,
       }}
-      onPress={onClick}
+      onPress={onClickFun}
     >
-      <Text style={styles.text}>{title}</Text>
+      {isLoadinCheck ? (
+        <ActivityIndicator size={"large"} color={screenBg} />
+      ) : (
+        <Text style={styles.text}>{title}</Text>
+      )}
     </TouchableOpacity>
   );
 };

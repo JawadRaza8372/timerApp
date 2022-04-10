@@ -1,39 +1,61 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  choclateList: null,
-  features: null,
-  lastupdate: null,
+  users: [],
+  tasks: [],
+  usersActivity: [],
+  layout: "",
+  todayActivity: null,
 };
 
 export const projectSlice = createSlice({
   name: "project",
   initialState,
   reducers: {
-    setFeatures: (state, action) => {
-      if (action.payload.features === null) {
-        state.features = null;
+    setUsers: (state, action) => {
+      if (action.payload.users === null) {
+        state.users = null;
       } else {
-        state.features = action.payload.features;
+        state.users = action.payload.users;
       }
     },
-    setChocoList: (state, action) => {
-      if (action.payload.choclateList === null) {
-        state.choclateList = null;
+    setTasks: (state, action) => {
+      if (action.payload.tasks === null) {
+        state.tasks = null;
       } else {
-        state.choclateList = action.payload.choclateList;
+        state.tasks = action.payload.tasks;
       }
     },
-    setUpdate: (state, action) => {
-      if (action.payload.lastupdate === null) {
-        state.lastupdate = null;
+    setUserActivity: (state, action) => {
+      if (action.payload.usersActivity === null) {
+        state.usersActivity = null;
       } else {
-        state.lastupdate = action.payload.lastupdate;
+        state.usersActivity = action.payload.usersActivity;
+      }
+    },
+    setLayout: (state, action) => {
+      if (action.payload.loginLayout === null) {
+        state.layout = "";
+      } else {
+        state.layout = action.payload.loginLayout;
+      }
+    },
+    setTodayActivity: (state, action) => {
+      if (action.payload.todayActivity === null) {
+        state.todayActivity = null;
+      } else {
+        state.todayActivity = action.payload.todayActivity;
       }
     },
   },
 });
 
-export const { setFeatures, setChocoList, setUpdate } = projectSlice.actions;
+export const {
+  setTasks,
+  setUsers,
+  setUserActivity,
+  setLayout,
+  setTodayActivity,
+} = projectSlice.actions;
 
 export default projectSlice.reducer;

@@ -50,7 +50,12 @@ const AnimatedTimeComp = () => {
       />
     </svg>`;
   return (
-    <View style={{ position: "relative", height: "40%" }}>
+    <View
+      style={{
+        position: "relative",
+        height: "80%",
+      }}
+    >
       <Animated.View
         style={{
           width: "100%",

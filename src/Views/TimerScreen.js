@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { mainColor, screenBg, stopColor } from "../AppColors";
 import CircleTimer from "react-native-circle-timer";
 import CustomLoginUser from "../Components/CustomLoginUser";
@@ -8,8 +8,62 @@ import { w, h } from "react-native-responsiveness";
 import { Feather } from "@expo/vector-icons";
 import CustomModel from "../Components/CustomModel";
 import AnimatedTimeComp from "../Components/AnimatedTimeComp";
+import { useDispatch, useSelector } from "react-redux";
+import { db } from "../DataBase/Configer";
+import { setTodayActivity } from "../store/projectSlice";
 const TimerScreen = ({ navigation }) => {
   const [ismodal, setismodal] = useState(false);
+  const [selectedTask, setselectedTask] = useState("");
+  const { tasks, todayActivity } = useSelector((state) => state.project);
+  const { isAuth } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  console.log(tasks);
+  console.log("checking for activity id =>", todayActivity, " <=====");
+  // console.log("now", today);
+  const checkForDoc = async () => {
+    var todayval = new Date().toLocaleDateString();
+    console.log(todayval);
+    if (isAuth.Role === "Employe") {
+      await db
+        .collection("DailyActivity")
+        .where("createdAt", "==", todayval)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.docs.map((doc) => {
+            if (doc.data().userid === isAuth.userid) {
+              console.log("found");
+              dispatch(setTodayActivity({ todayActivity: doc.id }));
+            } else {
+              console.log("notfound");
+            }
+          });
+          // console.log("checking for data ", newdata.id);
+        });
+    }
+  };
+  useEffect(() => {
+    checkForDoc();
+  }, []);
+
+  const activityManplt = () => {};
+  const startBtnFunct = () => {
+    if (selectedTask === "working") {
+      //time when work started
+      const today = new Date().toLocaleTimeString();
+    } else if (selectedTask === "break") {
+      //time when break started
+      const today = new Date().toLocaleTimeString();
+    }
+  };
+  const endBtnFunct = () => {
+    if (selectedTask === "working") {
+      //time when work end
+      const today = new Date().toLocaleTimeString();
+    } else if (selectedTask === "break") {
+      //time when break end
+      const today = new Date().toLocaleTimeString();
+    }
+  };
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.introdiv}>
@@ -21,20 +75,22 @@ const TimerScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.activitysel}>
-        <CustomLoginUser title={"Working"} istimer={true} />
+        <CustomLoginUser
+          title={"Select Task"}
+          istimer={true}
+          myData={tasks}
+          selectionFun={(dat) => console.log(dat)}
+        />
       </View>
-      {/* <CircleTimer
-        radius={80}
-        borderWidth={10}
-        seconds={1000}
-        borderColor={"#F5F5F5"}
-        borderBackgroundColor={mainColor}
-        onTimeElapsed={() => {
-          console.log("Timer Finished!");
+      <View
+        style={{
+          height: h("40%"),
+          width: "100%",
+          justifyContent: "center",
         }}
-        showSecond={false}
-      /> */}
-      <AnimatedTimeComp />
+      >
+        <AnimatedTimeComp />
+      </View>
       <View style={styles.activitysel}>
         <CustomAuthBtn
           istimer={true}

@@ -1,31 +1,142 @@
 import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { screenBg } from "../AppColors";
 import AdminLogin from "../Components/AdminLogin";
 import EmployLogin from "../Components/EmployLogin";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { db } from "../DataBase/Configer";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuth } from "../store/authSlice";
+import { setLayout, setTasks } from "../store/projectSlice";
 const AuthScreen = ({ navigation }) => {
-  const [isClientLayout, setisClientLayout] = useState(true);
-  return (
-    <SafeAreaView style={styles.mainDiv}>
-      {isClientLayout ? (
+  const { isAuth } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const cresteNewdoc = async () => {
+    await db
+      .collection("DailyActivity")
+      .add({
+        createdAt: new Date().toLocaleDateString(),
+        activity: [],
+        userid: isAuth.userid,
+      })
+      .then((doc) => {
+        console.log("document created" + doc.id);
+      });
+  };
+  const checkForDoc = async () => {
+    var todayval = new Date().toLocaleDateString();
+    console.log(todayval);
+    if (isAuth.Role === "Employe") {
+      await db
+        .collection("DailyActivity")
+        .where("createdAt", "==", todayval)
+        .get()
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            cresteNewdoc();
+          } else {
+            const newdata = querySnapshot.docs.filter(
+              (doc) => doc.data().userid === isAuth.userid
+            );
+            if (newdata.length === 0) {
+              cresteNewdoc();
+            }
+          }
+        });
+    }
+  };
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("TimerLayout");
+      console.log("checking", value);
+      dispatch(setLayout({ loginLayout: `${value}` }));
+    } catch (e) {
+      // error reading value
+    }
+  };
+  const getTasks = async () => {
+    db.collection("TaskMange")
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          console.log("notasks");
+        } else {
+          dispatch(
+            setTasks({
+              tasks: querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                title: doc.data().Title,
+                value: doc.data().Value,
+              })),
+            })
+          );
+        }
+      });
+  };
+  useEffect(() => {
+    getData();
+    getTasks();
+  }, []);
+  const loginFunct = async (data) => {
+    await db
+      .collection("authSystem")
+      .where("email", "==", `${data?.email}`)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          console.log("user does not exist");
+        } else {
+          querySnapshot.forEach((doc) => {
+            if (doc.data().password === data?.password) {
+              console.log("Auth Suceess");
+
+              dispatch(
+                setAuth({
+                  auth: {
+                    userid: doc.id,
+                    email: doc.data().email,
+                    lastName: doc.data().lastName,
+                    firstName: doc.data().firstName,
+                    Role: doc.data().Role,
+                  },
+                })
+              );
+              if (doc.data().Role === "Employe") {
+                navigation.navigate("Client");
+              } else {
+                navigation.navigate("Admin");
+              }
+            } else {
+              console.log("Wrong Credientials");
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+  };
+  const { layout } = useSelector((state) => state.project);
+  useEffect(() => {
+    if (isAuth) {
+      checkForDoc();
+    }
+  }, [isAuth]);
+
+  const renderlayout = () => {
+    if (layout === "Kiosk") {
+      return (
         <EmployLogin
-          onOther={() => setisClientLayout(!isClientLayout)}
-          onSubmit={(data) => {
-            console.log(data);
-            navigation.navigate("Client");
-          }}
+          onOther={() => dispatch(setLayout({ loginLayout: "" }))}
+          onSubmit={loginFunct}
         />
-      ) : (
-        <AdminLogin
-          onSubmit={(data) => {
-            console.log(data);
-            navigation.navigate("Admin");
-          }}
-        />
-      )}
-    </SafeAreaView>
-  );
+      );
+    } else {
+      return <AdminLogin onSubmit={loginFunct} />;
+    }
+  };
+
+  return <SafeAreaView style={styles.mainDiv}>{renderlayout()}</SafeAreaView>;
 };
 
 export default AuthScreen;

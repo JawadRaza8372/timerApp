@@ -83,7 +83,9 @@ const DayActivityAdmin = () => {
           <TouchableOpacity onPress={toggleModel} style={styles.closebtn}>
             <Entypo name="cross" size={h("3.8%")} color="black" />
           </TouchableOpacity>
-          <AnimatedTimeComp />
+          <View style={{ height: "40%", width: "100%" }}>
+            <AnimatedTimeComp />
+          </View>
           <View>
             <Text style={styles.labl}>New Entry</Text>
             <TextInput style={styles.inputfild} value="17:21:31" />

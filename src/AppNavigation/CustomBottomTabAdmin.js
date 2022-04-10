@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BottomTabBar,
   createBottomTabNavigator,
@@ -23,8 +23,45 @@ import { w, h } from "react-native-responsiveness";
 import Dashbord from "../Views/Dashbord";
 import AddUserScreen from "../Views/AddUserScreen";
 import TaskSettings from "../Views/TaskSettings";
+import { useDispatch, useSelector } from "react-redux";
+import { db } from "../DataBase/Configer";
+import { setUsers } from "../store/projectSlice";
 const CustomBottomTabAdmin = () => {
-  const [showAdd, setshowAdd] = useState(false);
+  const { isAuth } = useSelector((state) => state.auth);
+  const { users } = useSelector((state) => state.project);
+  console.log(users.length);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isAuth) {
+      db.collection("authSystem")
+        .where("addBy", "==", `${isAuth.userid}`)
+        .get()
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            console.log("no users created by this user");
+          } else {
+            dispatch(
+              setUsers({
+                users: querySnapshot.docs.map((doc) => ({
+                  userid: doc.id,
+                  value: doc.data().email,
+                  title: doc.data().firstName + doc.data().lastName,
+                  Role: doc.data().Role,
+                })),
+              })
+            );
+
+            // querySnapshot.forEach((doc) => {
+            //   console.log(doc.id);
+            // });
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    }
+  }, []);
+
   const CustomTabButton = ({ children, onPress }) => {
     return (
       <TouchableOpacity
