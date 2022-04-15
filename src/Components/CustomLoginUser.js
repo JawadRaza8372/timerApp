@@ -36,7 +36,7 @@ const CustomLoginUser = ({ istimer, title, myData, selectionFun }) => {
         }}
       >
         <View style={styles.custminp}>
-          <Text>{title}</Text>
+          <Text style={{ textTransform: "capitalize" }}>{title}</Text>
         </View>
         <View style={styles.inpBtn}>
           {showDrop ? (

@@ -5,6 +5,7 @@ import AuthScreen from "../Views/AuthScreen";
 import CustomBottomTabAdmin from "./CustomBottomTabAdmin";
 import AdminActivityScreen from "../Views/AdminActivityScreen";
 import UpdateUserScreen from "../Views/UpdateUserScreen";
+import MySubscription from "../Views/MySubscription";
 const Stack = createStackNavigator();
 export default function MyStackNavig() {
   return (
@@ -30,10 +31,17 @@ export default function MyStackNavig() {
           name="adminActivity"
           component={AdminActivityScreen}
           options={{ headerShown: false }}
+          initialParams={{ userid: null }}
         />
         <Stack.Screen
           name="UpdateUserAdmin"
           component={UpdateUserScreen}
+          options={{ headerShown: false }}
+          initialParams={{ userid: null }}
+        />
+        <Stack.Screen
+          name="Subscription"
+          component={MySubscription}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

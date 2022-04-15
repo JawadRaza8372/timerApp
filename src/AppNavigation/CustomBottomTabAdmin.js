@@ -26,11 +26,20 @@ import TaskSettings from "../Views/TaskSettings";
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "../DataBase/Configer";
 import { setUsers } from "../store/projectSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const CustomBottomTabAdmin = () => {
   const { isAuth } = useSelector((state) => state.auth);
   const { users } = useSelector((state) => state.project);
-  console.log(users.length);
   const dispatch = useDispatch();
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("timerEmployList", jsonValue);
+      console.log("");
+    } catch (e) {
+      // saving error
+    }
+  };
   useEffect(() => {
     if (isAuth) {
       db.collection("authSystem")
@@ -45,12 +54,19 @@ const CustomBottomTabAdmin = () => {
                 users: querySnapshot.docs.map((doc) => ({
                   userid: doc.id,
                   value: doc.data().email,
-                  title: doc.data().firstName + doc.data().lastName,
+                  title: doc.data().firstName + " " + doc.data().lastName,
                   Role: doc.data().Role,
                 })),
               })
             );
-
+            storeData(
+              querySnapshot.docs.map((doc) => ({
+                userid: doc.id,
+                value: doc.data().email,
+                title: doc.data().firstName + " " + doc.data().lastName,
+                Role: doc.data().Role,
+              }))
+            );
             // querySnapshot.forEach((doc) => {
             //   console.log(doc.id);
             // });

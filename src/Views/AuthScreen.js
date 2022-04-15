@@ -7,7 +7,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../DataBase/Configer";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuth } from "../store/authSlice";
-import { setLayout, setTasks } from "../store/projectSlice";
+import {
+  setLayout,
+  setTasks,
+  setTodayActivity,
+  setUserActivity,
+  setUsers,
+} from "../store/projectSlice";
 const AuthScreen = ({ navigation }) => {
   const { isAuth } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -15,17 +21,37 @@ const AuthScreen = ({ navigation }) => {
     await db
       .collection("DailyActivity")
       .add({
-        createdAt: new Date().toLocaleDateString(),
+        createdAt: new Date().toDateString(),
         activity: [],
         userid: isAuth.userid,
       })
       .then((doc) => {
-        console.log("document created" + doc.id);
+        console.log("document created");
+        dispatch(setTodayActivity({ todayActivity: doc.id }));
       });
   };
   const checkForDoc = async () => {
     var todayval = new Date().toLocaleDateString();
-    console.log(todayval);
+    db.collection("DailyActivity")
+      .orderBy("createdAt", "desc")
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          dispatch(setUserActivity({ usersActivity: [] }));
+        } else {
+          dispatch(
+            setUserActivity({
+              usersActivity: querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                createdAt: doc.data().createdAt,
+                userid: doc.data().userid,
+                activity: doc.data().activity,
+              })),
+            })
+          );
+        }
+      });
+
     if (isAuth.Role === "Employe") {
       await db
         .collection("DailyActivity")
@@ -48,8 +74,25 @@ const AuthScreen = ({ navigation }) => {
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem("TimerLayout");
-      console.log("checking", value);
       dispatch(setLayout({ loginLayout: `${value}` }));
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  const getEmployLoginData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("timerEmployList");
+      if (
+        jsonValue !== null &&
+        jsonValue !== undefined &&
+        jsonValue !== "null" &&
+        jsonValue !== "undefined" &&
+        jsonValue !== ""
+      ) {
+        var newdata = JSON.parse(jsonValue);
+        dispatch(setUsers({ users: newdata }));
+      }
     } catch (e) {
       // error reading value
     }
@@ -76,6 +119,7 @@ const AuthScreen = ({ navigation }) => {
   useEffect(() => {
     getData();
     getTasks();
+    getEmployLoginData();
   }, []);
   const loginFunct = async (data) => {
     await db

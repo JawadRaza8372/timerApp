@@ -2,8 +2,9 @@ import { StyleSheet, Text, View, Animated } from "react-native";
 import React, { useState, useEffect } from "react";
 import Svg, { Circle, SvgXml } from "react-native-svg";
 import { w, h } from "react-native-responsiveness";
-const AnimatedTimeComp = () => {
+const AnimatedTimeComp = ({ dateValue }) => {
   const [rotateAnimation, setRotateAnimation] = useState(new Animated.Value(0));
+  const [todaytime, settodaytime] = useState(new Date().toLocaleTimeString());
   const handleAnimation = () => {
     Animated.loop(
       Animated.timing(rotateAnimation, {
@@ -18,6 +19,9 @@ const AnimatedTimeComp = () => {
   };
   useEffect(() => {
     handleAnimation();
+    setInterval(() => {
+      settodaytime(new Date().toLocaleTimeString());
+    }, 1000);
   }, []);
 
   const interpolateRotating = rotateAnimation.interpolate({
@@ -76,7 +80,9 @@ const AnimatedTimeComp = () => {
           justifyContent: "center",
         }}
       >
-        <Text style={{ fontSize: h("3%") }}>17:14:44</Text>
+        <Text style={{ fontSize: h("3%"), fontWeight: "bold" }}>
+          {dateValue ? dateValue : todaytime}
+        </Text>
       </View>
     </View>
   );

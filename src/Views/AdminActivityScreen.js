@@ -10,14 +10,15 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 import { mainColor, screenBg } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
-import DayActivity from "../Components/DayActivity";
 import { Entypo } from "@expo/vector-icons";
 import DayActivityAdmin from "../Components/DayActivityAdmin";
-import Svg, { Circle, SvgXml } from "react-native-svg";
-
-const AdminActivityScreen = ({ navigation }) => {
-  const mydat = [{ key: "1" }, { key: "2" }, { key: "3" }, { key: "4" }];
-
+import { useSelector } from "react-redux";
+const AdminActivityScreen = ({ route, navigation }) => {
+  const { usersActivity, users } = useSelector((state) => state.project);
+  const { userid } = route.params;
+  const curentUser = userid && users.filter((dat) => dat.userid === userid);
+  console.log(userid);
+  console.log(curentUser);
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.headingdiv}>
@@ -33,14 +34,23 @@ const AdminActivityScreen = ({ navigation }) => {
           <Entypo name="chevron-left" size={h("5%")} color="black" />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate("UpdateUserAdmin")}>
-        <Text style={styles.username}>Jhon Doe</Text>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("UpdateUserAdmin", { userid: userid })
+        }
+      >
+        <Text style={styles.username}>{curentUser[0].value}</Text>
       </TouchableOpacity>
 
       <FlatList
-        data={mydat}
-        keyExtractor={(item) => item.key}
-        renderItem={({ item }) => <DayActivityAdmin />}
+        data={usersActivity.filter((dat) => dat.userid === userid)}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <DayActivityAdmin
+            date={item.createdAt}
+            activityArry={item.activity}
+          />
+        )}
       />
     </SafeAreaView>
   );

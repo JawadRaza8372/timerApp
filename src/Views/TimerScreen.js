@@ -11,18 +11,25 @@ import AnimatedTimeComp from "../Components/AnimatedTimeComp";
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "../DataBase/Configer";
 import { setTodayActivity } from "../store/projectSlice";
+import moment from "moment";
 const TimerScreen = ({ navigation }) => {
   const [ismodal, setismodal] = useState(false);
   const [selectedTask, setselectedTask] = useState("");
+  const [continuing, setcontinuing] = useState(false);
+  const [newSelecteddata, setnewSelecteddata] = useState({
+    TaskName: "",
+    taskTime: "",
+  });
   const { tasks, todayActivity } = useSelector((state) => state.project);
   const { isAuth } = useSelector((state) => state.auth);
+  const [fetchTodayDoc, setfetchTodayDoc] = useState({
+    id: null,
+    createdAt: null,
+    activity: [],
+  });
   const dispatch = useDispatch();
-  console.log(tasks);
-  console.log("checking for activity id =>", todayActivity, " <=====");
-  // console.log("now", today);
   const checkForDoc = async () => {
-    var todayval = new Date().toLocaleDateString();
-    console.log(todayval);
+    var todayval = new Date().toDateString();
     if (isAuth.Role === "Employe") {
       await db
         .collection("DailyActivity")
@@ -33,6 +40,7 @@ const TimerScreen = ({ navigation }) => {
             if (doc.data().userid === isAuth.userid) {
               console.log("found");
               dispatch(setTodayActivity({ todayActivity: doc.id }));
+              gettodaydoc(doc.id);
             } else {
               console.log("notfound");
             }
@@ -41,45 +49,107 @@ const TimerScreen = ({ navigation }) => {
         });
     }
   };
+  const gettodaydoc = async (value) => {
+    var ref = value ? value : todayActivity;
+    await db
+      .collection("DailyActivity")
+      .doc(ref)
+      .get()
+      .then((doc) => {
+        console.log("doc available");
+        setfetchTodayDoc({
+          id: doc.id,
+          createdAt: doc.data().createdAt,
+          activity: doc.data().activity,
+        });
+      });
+  };
   useEffect(() => {
     checkForDoc();
   }, []);
 
-  const activityManplt = () => {};
-  const startBtnFunct = () => {
-    if (selectedTask === "working") {
-      //time when work started
-      const today = new Date().toLocaleTimeString();
-    } else if (selectedTask === "break") {
-      //time when break started
-      const today = new Date().toLocaleTimeString();
-    }
+  const activityManplt = async () => {
+    await db
+      .collection("DailyActivity")
+      .doc(todayActivity)
+      .update({ activity: [...fetchTodayDoc.activity, newSelecteddata] })
+      .then((doc) => console.log("updated"));
   };
-  const endBtnFunct = () => {
-    if (selectedTask === "working") {
-      //time when work end
-      const today = new Date().toLocaleTimeString();
-    } else if (selectedTask === "break") {
-      //time when break end
-      const today = new Date().toLocaleTimeString();
+  useEffect(() => {
+    if (newSelecteddata.TaskName && newSelecteddata.taskTime) {
+      activityManplt();
+      gettodaydoc();
+      setnewSelecteddata({ TaskName: "", taskTime: "" });
     }
+  }, [newSelecteddata]);
+  const startBtnFunct = async () => {
+    var today = new Date().toLocaleTimeString();
+    await setnewSelecteddata({ TaskName: selectedTask, taskTime: today });
   };
+  const validatebtnFunction = () => {
+    startBtnFunct();
+    setismodal(!ismodal);
+  };
+  useEffect(() => {
+    if (fetchTodayDoc.activity.length > 0) {
+      var taskname =
+        fetchTodayDoc.activity[fetchTodayDoc.activity.length - 1].TaskName;
+      setselectedTask(taskname);
+      if (taskname) {
+        if (taskname.includes("end")) {
+          setcontinuing(false);
+        } else {
+          setcontinuing(true);
+        }
+      }
+      if (fetchTodayDoc.activity.length > 1) {
+        const check =
+          new Date(
+            `${fetchTodayDoc.createdAt} ${
+              fetchTodayDoc.activity[fetchTodayDoc.activity.length - 1].taskTime
+            }`
+          ).getTime() -
+          new Date(
+            `${fetchTodayDoc.createdAt} ${fetchTodayDoc.activity[0].taskTime}`
+          ).getTime();
+        console.log("checking two wala", check);
+      }
+      {
+        const check =
+          new Date(
+            `${fetchTodayDoc.createdAt} ${
+              fetchTodayDoc.activity[fetchTodayDoc.activity.length - 1].taskTime
+            }`
+          ).getTime() - new Date().getTime();
+        console.log("checking one Wla", check);
+      }
+    }
+  }, [fetchTodayDoc]);
+  const check = new Date();
+  console.log("date1", check.toDateString());
+  console.log("date1", check.toLocaleDateString());
+  console.log("date1", check.getDate());
+
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.introdiv}>
         <Text style={styles.head}>Timer</Text>
         <View style={styles.datdiv}>
           <Feather name="calendar" size={h("3.1%")} color="black" />
-          <Text style={styles.dattxt}>08/03/2022</Text>
+          <Text style={styles.dattxt}>
+            {fetchTodayDoc.createdAt
+              ? new Date(fetchTodayDoc.createdAt).toDateString()
+              : new Date().toDateString()}
+          </Text>
         </View>
       </View>
 
       <View style={styles.activitysel}>
         <CustomLoginUser
-          title={"Select Task"}
+          title={selectedTask ? selectedTask.replace("_", " ") : "Select Task"}
           istimer={true}
           myData={tasks}
-          selectionFun={(dat) => console.log(dat)}
+          selectionFun={(dat) => setselectedTask(dat)}
         />
       </View>
       <View
@@ -92,24 +162,38 @@ const TimerScreen = ({ navigation }) => {
         <AnimatedTimeComp />
       </View>
       <View style={styles.activitysel}>
-        <CustomAuthBtn
-          istimer={true}
-          title={"Start"}
-          bgColor={mainColor}
-          onClick={() => setismodal(!ismodal)}
-        />
+        {continuing ? (
+          <CustomAuthBtn
+            istimer={true}
+            title={"Stop"}
+            bgColor={stopColor}
+            onClick={() => setismodal(!ismodal)}
+          />
+        ) : (
+          <CustomAuthBtn
+            istimer={true}
+            title={selectedTask.includes("end") ? "Validate" : "Start"}
+            bgColor={mainColor}
+            onClick={startBtnFunct}
+          />
+        )}
       </View>
       <View style={styles.txtcont}>
         <Text style={styles.sechead}>Today’s total working time</Text>
-        <Text style={styles.firhead}>7 hr 45 mins</Text>
+        <Text style={styles.firhead}>12:41:33</Text>
       </View>
       <CustomModel show={ismodal} toggleModal={() => setismodal(!ismodal)}>
         <View style={styles.stopdiv}>
           <Text style={styles.head}>Stop Reason</Text>
-          <CustomLoginUser title={"Break"} istimer={true} />
+          <CustomLoginUser
+            title={selectedTask ? selectedTask : "Select One"}
+            istimer={true}
+            myData={tasks.filter((dat) => dat.value !== selectedTask)}
+            selectionFun={(dat) => setselectedTask(dat)}
+          />
           <CustomAuthBtn
             title={"Validate"}
-            onClick={() => setismodal(!ismodal)}
+            onClick={validatebtnFunction}
             istimer={true}
           />
         </View>

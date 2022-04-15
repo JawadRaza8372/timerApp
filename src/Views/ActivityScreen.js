@@ -3,16 +3,23 @@ import React from "react";
 import { mainColor, screenBg } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
 import DayActivity from "../Components/DayActivity";
+import { useSelector } from "react-redux";
 const ActivityScreen = ({ navigation }) => {
-  const mydat = [{ key: "1" }, { key: "2" }, { key: "3" }, { key: "4" }];
+  const { usersActivity } = useSelector((state) => state.project);
+  const { isAuth } = useSelector((state) => state.auth);
+  console.log("trying", isAuth);
   return (
     <SafeAreaView style={styles.mainDiv}>
       <Text style={styles.heading}>Activity</Text>
-      <Text style={styles.username}>Jhon Doe</Text>
+      <Text style={styles.username}>
+        {isAuth.firstName} {isAuth.lastName}
+      </Text>
       <FlatList
-        data={mydat}
-        keyExtractor={(item) => item.key}
-        renderItem={({ item }) => <DayActivity />}
+        data={usersActivity.filter((dat) => dat.userid === isAuth.userid)}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <DayActivity date={item.createdAt} activityArry={item.activity} />
+        )}
       />
     </SafeAreaView>
   );

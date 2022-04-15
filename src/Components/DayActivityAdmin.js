@@ -15,7 +15,8 @@ import CustomModel from "./CustomModel";
 import AnimatedTimeComp from "./AnimatedTimeComp";
 import CustomInput from "./CustomInput";
 import CustomAuthBtn from "./CustomAuthBtn";
-const DayActivityAdmin = () => {
+import AdminActivityAdmin from "./AdminActivityAdmin";
+const DayActivityAdmin = ({ date, activityArry }) => {
   const [openModel, setopenModel] = useState(false);
   const toggleModel = () => {
     setopenModel(!openModel);
@@ -25,53 +26,33 @@ const DayActivityAdmin = () => {
       <View style={styles.mainActDiv}>
         <View style={styles.datdiv}>
           <Feather name="calendar" size={h("3.1%")} color="black" />
-          <Text style={styles.dattxt}>08/03/2022</Text>
+          <Text style={styles.dattxt}>{date}</Text>
         </View>
         <View style={styles.contentdiv}>
-          <View style={styles.activityinfo}>
-            <View style={styles.contina}>
-              <Entypo name="cross" size={h("3.8%")} color="black" />
-
-              <Text style={styles.activityName}>Working</Text>
+          {activityArry &&
+            activityArry.map((dat, index) => (
+              <AdminActivityAdmin
+                TaskName={dat.TaskName}
+                taskTime={dat.taskTime}
+                docid={dat.id}
+                key={dat.id}
+                myindex={index}
+                fullArry={activityArry}
+              />
+            ))}
+          {activityArry.length === 0 && (
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontSize: h("3%") }}>No Data Available</Text>
             </View>
-            <TouchableOpacity onPress={toggleModel} style={styles.contina}>
-              <Text style={styles.activityTime}>17:14:25</Text>
-              <FontAwesome5 name="edit" size={h("2.7%")} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.activityinfo}>
-            <View style={styles.contina}>
-              <Entypo name="cross" size={h("3.8%")} color="black" />
-
-              <Text style={styles.activityName}>Break</Text>
-            </View>
-            <TouchableOpacity onPress={toggleModel} style={styles.contina}>
-              <Text style={styles.activityTime}>17:14:25</Text>
-              <FontAwesome5 name="edit" size={h("2.7%")} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.activityinfo}>
-            <View style={styles.contina}>
-              <Entypo name="cross" size={h("3.8%")} color="black" />
-
-              <Text style={styles.activityName}>End of break</Text>
-            </View>
-            <TouchableOpacity onPress={toggleModel} style={styles.contina}>
-              <Text style={styles.activityTime}>17:14:25</Text>
-              <FontAwesome5 name="edit" size={h("2.7%")} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.activityinfo}>
-            <View style={styles.contina}>
-              <Entypo name="cross" size={h("3.8%")} color="black" />
-
-              <Text style={styles.activityName}>End of working</Text>
-            </View>
-            <TouchableOpacity onPress={toggleModel} style={styles.contina}>
-              <Text style={styles.activityTime}>17:14:25</Text>
-              <FontAwesome5 name="edit" size={h("2.7%")} color="black" />
-            </TouchableOpacity>
-          </View>
+          )}
         </View>
         <View style={styles.txtcont}>
           <Text style={styles.sechead}>Today’s total working time</Text>

@@ -10,55 +10,29 @@ import React from "react";
 import { w, h } from "react-native-responsiveness";
 import { inputBg, mainColor, screenBg, stopColor } from "../AppColors";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 const Dashbord = ({ navigation }) => {
-  const myData = [
-    { user: "Jhon", status: "Working" },
-    { user: "Gabrial", status: "Working" },
-    { user: "William", status: "Inactive" },
-    { user: "Oliver", status: "Break" },
-    { user: "Thomas", status: "Working" },
-  ];
+  const { users } = useSelector((state) => state.project);
+  console.log(users);
   return (
     <SafeAreaView style={styles.mainDiv}>
       <Text style={styles.heading}>Dashbord</Text>
       <View style={styles.filldiv}>
         <View style={styles.contentShow}>
           <FlatList
-            data={myData}
-            keyExtractor={(item) => item.user}
+            data={users}
+            keyExtractor={(item) => item.userid}
             renderItem={({ item }) => (
               <>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("adminActivity")}
+                  onPress={() =>
+                    navigation.navigate("adminActivity", {
+                      userid: item.userid,
+                    })
+                  }
                   style={styles.usermain}
                 >
-                  <Text>{item.user}</Text>
-                  <View style={styles.statusdiv}>
-                    <MaterialIcons
-                      name="timer"
-                      color={
-                        item.status === "Break"
-                          ? stopColor
-                          : item.status === "Inactive"
-                          ? inputBg
-                          : "black"
-                      }
-                      size={h("2.5%")}
-                    />
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        color:
-                          item.status === "Break"
-                            ? stopColor
-                            : item.status === "Inactive"
-                            ? "grey"
-                            : mainColor,
-                      }}
-                    >
-                      {item.status}
-                    </Text>
-                  </View>
+                  <Text>{item.value}</Text>
                 </TouchableOpacity>
               </>
             )}

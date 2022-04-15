@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { w, h } from "react-native-responsiveness";
 import { screenBg, stopColor } from "../AppColors";
 import CustomInput from "../Components/CustomInput";
@@ -15,7 +15,10 @@ import CustomPaswdInput from "../Components/CustomPaswdInput";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { Entypo } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
-const UpdateUserScreen = ({ navigation }) => {
+import { db } from "../DataBase/Configer";
+const UpdateUserScreen = ({ route, navigation }) => {
+  const { userid } = route.params;
+
   const [formData, setformData] = useState({
     Role: "",
     lastName: "",
@@ -23,6 +26,36 @@ const UpdateUserScreen = ({ navigation }) => {
     email: "",
     password: "",
   });
+  const getuser = async () => {
+    await db
+      .collection("authSystem")
+      .doc(userid)
+      .get()
+      .then((dat) => {
+        setformData(dat.data());
+      });
+  };
+  useEffect(() => {
+    getuser();
+  }, []);
+  const updateFunct = async () => {
+    await db
+      .collection("authSystem")
+      .doc(userid)
+      .update(formData)
+      .then((doc) => {
+        console.log("doc updated");
+      });
+  };
+  const deltFunc = async () => {
+    await db
+      .collection("authSystem")
+      .doc(userid)
+      .delete()
+      .then(() => {
+        console.log("done");
+      });
+  };
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.introdiv}>
@@ -122,11 +155,11 @@ const UpdateUserScreen = ({ navigation }) => {
             />
           </View>
 
-          <CustomAuthBtn title="Update" onClick={() => console.log("done")} />
+          <CustomAuthBtn title="Update" onClick={updateFunct} />
           <CustomAuthBtn
             bgColor={stopColor}
             title="Delete"
-            onClick={() => console.log("done", formData)}
+            onClick={deltFunc}
           />
         </View>
       </KeyboardAwareScrollView>

@@ -4,30 +4,35 @@ import { Feather } from "@expo/vector-icons";
 import { w, h } from "react-native-responsiveness";
 import { inputBg, mainColor } from "../AppColors";
 import { color } from "react-native-reanimated";
-const DayActivity = () => {
+const DayActivity = ({ date, activityArry }) => {
+  console.log("checking arry", activityArry);
   return (
     <View style={styles.mainActDiv}>
       <View style={styles.datdiv}>
         <Feather name="calendar" size={h("3.1%")} color="black" />
-        <Text style={styles.dattxt}>08/03/2022</Text>
+        <Text style={styles.dattxt}>{date}</Text>
       </View>
       <View style={styles.contentdiv}>
-        <View style={styles.activityinfo}>
-          <Text style={styles.activityName}>Working</Text>
-          <Text style={styles.activityTime}>Time</Text>
-        </View>
-        <View style={styles.activityinfo}>
-          <Text style={styles.activityName}>Break</Text>
-          <Text style={styles.activityTime}>Time</Text>
-        </View>
-        <View style={styles.activityinfo}>
-          <Text style={styles.activityName}>End of break</Text>
-          <Text style={styles.activityTime}>Time</Text>
-        </View>
-        <View style={styles.activityinfo}>
-          <Text style={styles.activityName}>End of working</Text>
-          <Text style={styles.activityTime}>Time</Text>
-        </View>
+        {activityArry &&
+          activityArry.map((dat, index) => (
+            <View key={index} style={styles.activityinfo}>
+              <Text style={styles.activityName}>{dat.TaskName}</Text>
+              <Text style={styles.activityTime}>{dat.taskTime}</Text>
+            </View>
+          ))}
+        {activityArry.length === 0 && (
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: h("3%") }}>No Data Available</Text>
+          </View>
+        )}
       </View>
       <View style={styles.txtcont}>
         <Text style={styles.sechead}>Today’s total working time</Text>
@@ -66,6 +71,7 @@ const styles = StyleSheet.create({
     height: h("20%"),
     backgroundColor: inputBg,
     borderRadius: h("2%"),
+    overflow: "hidden",
   },
   activityinfo: {
     width: "93%",

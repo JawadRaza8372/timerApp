@@ -25,7 +25,6 @@ const AddUserScreen = ({ navigation }) => {
       .collection("authSystem")
       .add(formData)
       .then((dat) => {
-        console.log(dat.id);
         console.log("done");
       });
     setformData({
@@ -37,6 +36,13 @@ const AddUserScreen = ({ navigation }) => {
       addBy: isAuth.userid,
     });
   };
+
+  const role1 = [
+    { title: "Admin (Manager)", value: "Admin (Manager)" },
+    { title: "Employe", value: "Employe" },
+  ];
+  const role2 = [{ title: "Employe", value: "Employe" }];
+  const usercateg = isAuth.Role === "Admin" ? role1 : role2;
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.introdiv}>
@@ -50,10 +56,7 @@ const AddUserScreen = ({ navigation }) => {
 
             <CustomLoginUser
               title={formData.Role}
-              myData={[
-                { title: "Admin (Manager)", value: "Admin (Manager)" },
-                { title: "Employe", value: "Employe" },
-              ]}
+              myData={usercateg}
               selectionFun={(dat) =>
                 setformData((prevalue) => {
                   return {

@@ -28,7 +28,6 @@ const TaskSettings = ({ navigation }) => {
   const { users, tasks, layout } = useSelector((state) => state.project);
   const { isAuth } = useSelector((state) => state.auth);
   const [taskAdd, settaskAdd] = useState("");
-  console.log("checkig tasks ", tasks.length);
   const dispatch = useDispatch();
   const getData = async () => {
     try {
@@ -68,14 +67,14 @@ const TaskSettings = ({ navigation }) => {
     setopenModel(!openModel);
   };
   const addTaskFunction = async () => {
+    const value = taskAdd.replace(" ", "_").toLowerCase();
     await db
       .collection("TaskMange")
       .add({
         Title: taskAdd.charAt(0).toUpperCase() + taskAdd.slice(1),
-        Value: taskAdd.toLowerCase(),
+        Value: value,
       })
       .then((doc) => {
-        console.log(doc.id);
         settaskAdd("");
         db.collection("TaskMange")
           .get()
@@ -155,27 +154,30 @@ const TaskSettings = ({ navigation }) => {
               </View>
               {/* )} */}
             </View>
-            {isAuth.Role === "Admin (Manager)" && (
-              <View style={styles.subscriptiondiv}>
-                <Text style={styles.litheadig}>
-                  Informations about your subscription
-                </Text>
-                <View style={styles.contentDiv}>
-                  <View style={{ width: "100%" }}>
-                    <View style={styles.tasks}>
-                      <Text>Your subscription is active</Text>
-                    </View>
-                    <View style={styles.tasks}>
-                      <Text>Number of users : {`${users.length}`}/10</Text>
-                    </View>
-                    <View style={styles.tasks}>
-                      <Text>Your role : {`${isAuth.Role}`}</Text>
-                    </View>
+            {/* {isAuth.Role === "Admin (Manager)" && ( */}
+            <View style={styles.subscriptiondiv}>
+              <Text style={styles.litheadig}>
+                Informations about your subscription
+              </Text>
+              <View style={styles.contentDiv}>
+                <View style={{ width: "100%" }}>
+                  <View style={styles.tasks}>
+                    <Text>Your subscription is active</Text>
                   </View>
-                  <CustomAuthBtn title={"Change Subscription"} />
+                  <View style={styles.tasks}>
+                    <Text>Number of users : {`${users.length}`}/10</Text>
+                  </View>
+                  <View style={styles.tasks}>
+                    <Text>Your role : {`${isAuth.Role}`}</Text>
+                  </View>
                 </View>
+                <CustomAuthBtn
+                  title={"Change Subscription"}
+                  onClick={() => navigation.navigate("Subscription")}
+                />
               </View>
-            )}
+            </View>
+            {/* )} */}
           </View>
         </KeyboardAwareScrollView>
       </SafeAreaView>
