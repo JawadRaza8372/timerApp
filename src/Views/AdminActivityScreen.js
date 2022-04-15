@@ -17,8 +17,7 @@ const AdminActivityScreen = ({ route, navigation }) => {
   const { usersActivity, users } = useSelector((state) => state.project);
   const { userid } = route.params;
   const curentUser = userid && users.filter((dat) => dat.userid === userid);
-  console.log(userid);
-  console.log(curentUser);
+  console.log(usersActivity[0]);
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.headingdiv}>
@@ -48,6 +47,7 @@ const AdminActivityScreen = ({ route, navigation }) => {
         renderItem={({ item }) => (
           <DayActivityAdmin
             date={item.createdAt}
+            docid={item.id}
             activityArry={item.activity}
           />
         )}

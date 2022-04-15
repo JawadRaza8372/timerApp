@@ -7,9 +7,12 @@ import CustomLoginUser from "../Components/CustomLoginUser";
 import CustomPaswdInput from "../Components/CustomPaswdInput";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { db } from "../DataBase/Configer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setUsers } from "../store/projectSlice";
 const AddUserScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { isAuth } = useSelector((state) => state.auth);
   const [formData, setformData] = useState({
     Role: "User",
@@ -19,13 +22,59 @@ const AddUserScreen = ({ navigation }) => {
     password: "",
     addBy: isAuth.userid,
   });
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("timerEmployList", jsonValue);
+      console.log("");
+    } catch (e) {
+      // saving error
+    }
+  };
+  const reftch = async () => {
+    await db
+      .collection("authSystem")
+      .where("addBy", "==", `${isAuth.userid}`)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          console.log("no users created by this user");
+        } else {
+          dispatch(
+            setUsers({
+              users: querySnapshot.docs.map((doc) => ({
+                userid: doc.id,
+                value: doc.data().email,
+                title: doc.data().firstName + " " + doc.data().lastName,
+                Role: doc.data().Role,
+              })),
+            })
+          );
+          storeData(
+            querySnapshot.docs.map((doc) => ({
+              userid: doc.id,
+              value: doc.data().email,
+              title: doc.data().firstName + " " + doc.data().lastName,
+              Role: doc.data().Role,
+            }))
+          );
+          // querySnapshot.forEach((doc) => {
+          //   console.log(doc.id);
+          // });
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+  };
+
   const adduserfun = async () => {
-    formData;
     await db
       .collection("authSystem")
       .add(formData)
       .then((dat) => {
         console.log("done");
+        reftch();
       });
     setformData({
       Role: "User",

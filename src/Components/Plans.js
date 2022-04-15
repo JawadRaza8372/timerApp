@@ -22,7 +22,7 @@ const Plans = ({ value, title, usercapcity, price, onClick }) => {
       <Text
         style={{
           ...styles.feature,
-          color: inputBg,
+          color: "grey",
         }}
       >
         User Capicity: {usercapcity}
@@ -70,11 +70,5 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-  },
-  activecolor: {
-    color: screenBg,
-  },
-  inactivecolor: {
-    color,
   },
 });

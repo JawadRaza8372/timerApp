@@ -31,6 +31,7 @@ const MySubscription = () => {
     price: 0,
     usercapcity: 0,
   });
+  console.log(selectedPlan);
   const fetchPaymentIntentClientSecret = async () => {
     const response = await axios.post(`${API_URL}/create-payment-intent`, {
       price: 1200,
@@ -92,14 +93,14 @@ const MySubscription = () => {
             onClick={onPressFun}
           />
           <Plans
-            value={selectedPlan}
+            value={selectedPlan.title}
             title={"Super Plan"}
             usercapcity={30}
             price={25}
             onClick={onPressFun}
           />
         </View>
-        <View>
+        <View style={styles.inputscont}>
           <CardField
             postalCodeEnabled={false}
             placeholder={{
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     backgroundColor: inputBg,
 
     borderRadius: 8,
-    fontSize: h("2.5%"),
+    fontSize: h("2%"),
     height: h("5%"),
     padding: 10,
     borderRadius: h("2%"),
@@ -143,10 +144,9 @@ const styles = StyleSheet.create({
     backgroundColor: inputBg,
   },
   cardContainer: {
-    height: h("5%"),
-    width: w("90%"),
+    height: h("6%"),
+    width: w("95%"),
     alignSelf: "center",
-    marginVertical: 30,
     borderRadius: h("2%"),
     overflow: "hidden",
   },
@@ -157,5 +157,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     flexDirection: "row",
+  },
+  inputscont: {
+    width: "100%",
+    height: h("30%"),
+    display: "flex",
+    justifyContent: "space-evenly",
   },
 });

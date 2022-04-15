@@ -16,7 +16,7 @@ import AnimatedTimeComp from "./AnimatedTimeComp";
 import CustomInput from "./CustomInput";
 import CustomAuthBtn from "./CustomAuthBtn";
 import AdminActivityAdmin from "./AdminActivityAdmin";
-const DayActivityAdmin = ({ date, activityArry }) => {
+const DayActivityAdmin = ({ date, activityArry, docid }) => {
   const [openModel, setopenModel] = useState(false);
   const toggleModel = () => {
     setopenModel(!openModel);
@@ -34,8 +34,8 @@ const DayActivityAdmin = ({ date, activityArry }) => {
               <AdminActivityAdmin
                 TaskName={dat.TaskName}
                 taskTime={dat.taskTime}
-                docid={dat.id}
-                key={dat.id}
+                docid={docid}
+                key={index}
                 myindex={index}
                 fullArry={activityArry}
               />

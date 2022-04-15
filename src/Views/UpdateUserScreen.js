@@ -16,9 +16,13 @@ import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { Entypo } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
 import { db } from "../DataBase/Configer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector, useDispatch } from "react-redux";
+import { setUsers } from "../store/projectSlice";
 const UpdateUserScreen = ({ route, navigation }) => {
   const { userid } = route.params;
-
+  const { isAuth } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const [formData, setformData] = useState({
     Role: "",
     lastName: "",
@@ -26,6 +30,51 @@ const UpdateUserScreen = ({ route, navigation }) => {
     email: "",
     password: "",
   });
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("timerEmployList", jsonValue);
+      console.log("");
+    } catch (e) {
+      // saving error
+    }
+  };
+  const reftch = async () => {
+    await db
+      .collection("authSystem")
+      .where("addBy", "==", `${isAuth.userid}`)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          console.log("no users created by this user");
+        } else {
+          dispatch(
+            setUsers({
+              users: querySnapshot.docs.map((doc) => ({
+                userid: doc.id,
+                value: doc.data().email,
+                title: doc.data().firstName + " " + doc.data().lastName,
+                Role: doc.data().Role,
+              })),
+            })
+          );
+          storeData(
+            querySnapshot.docs.map((doc) => ({
+              userid: doc.id,
+              value: doc.data().email,
+              title: doc.data().firstName + " " + doc.data().lastName,
+              Role: doc.data().Role,
+            }))
+          );
+          // querySnapshot.forEach((doc) => {
+          //   console.log(doc.id);
+          // });
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+  };
   const getuser = async () => {
     await db
       .collection("authSystem")
@@ -45,6 +94,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
       .update(formData)
       .then((doc) => {
         console.log("doc updated");
+        reftch();
       });
   };
   const deltFunc = async () => {
@@ -54,6 +104,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
       .delete()
       .then(() => {
         console.log("done");
+        reftch();
       });
   };
   return (

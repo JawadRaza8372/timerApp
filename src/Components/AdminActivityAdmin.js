@@ -12,7 +12,9 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import AnimatedTimeComp from "./AnimatedTimeComp";
-import db from "../DataBase/Configer";
+import { db } from "../DataBase/Configer";
+import { setUserActivity } from "../store/projectSlice";
+import { useDispatch } from "react-redux";
 const AdminActivityAdmin = ({
   TaskName,
   taskTime,
@@ -24,15 +26,41 @@ const AdminActivityAdmin = ({
   const [changetxt, setchangetxt] = useState(taskTime);
   //   console.log(index);
   let myArry = [];
+  const dispatch = useDispatch();
   const toggleModel = () => {
     setopenModel(!openModel);
+  };
+  const refetch = async () => {
+    await db
+      .collection("DailyActivity")
+      .orderBy("createdAt", "desc")
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          dispatch(setUserActivity({ usersActivity: [] }));
+        } else {
+          dispatch(
+            setUserActivity({
+              usersActivity: querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                createdAt: doc.data().createdAt,
+                userid: doc.data().userid,
+                activity: doc.data().activity,
+              })),
+            })
+          );
+        }
+      });
   };
   const activityManplt = async (value) => {
     await db
       .collection("DailyActivity")
-      .doc(todayActivity)
+      .doc(docid)
       .update({ activity: value })
-      .then((doc) => console.log("updated"));
+      .then((doc) => {
+        console.log("updated");
+        refetch();
+      });
   };
   const savEdited = async () => {
     await activityManplt(
