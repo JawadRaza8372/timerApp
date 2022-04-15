@@ -6,14 +6,21 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { w, h } from "react-native-responsiveness";
 import { inputBg, mainColor, screenBg, stopColor } from "../AppColors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 const Dashbord = ({ navigation }) => {
   const { users } = useSelector((state) => state.project);
-  console.log(users);
+
+  const { isAuth } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (isAuth === null || !isAuth) {
+      navigation.replace("Auth");
+    }
+  }, []);
+
   return (
     <SafeAreaView style={styles.mainDiv}>
       <Text style={styles.heading}>Dashbord</Text>

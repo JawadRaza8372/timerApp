@@ -86,6 +86,9 @@ const UpdateUserScreen = ({ route, navigation }) => {
   };
   useEffect(() => {
     getuser();
+    if (isAuth === null || !isAuth) {
+      navigation.replace("Auth");
+    }
   }, []);
   const updateFunct = async () => {
     await db

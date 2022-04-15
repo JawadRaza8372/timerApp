@@ -7,7 +7,7 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { w, h } from "react-native-responsiveness";
 import {
   StripeProvider,
@@ -21,8 +21,14 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import Plans from "../Components/Plans";
 
-const MySubscription = () => {
+const MySubscription = ({ navigation }) => {
   const { isAuth } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (isAuth === null || !isAuth) {
+      navigation.replace("Auth");
+    }
+  }, []);
+
   const email = isAuth.email;
   const [cardDetails, setCardDetails] = useState();
   const { confirmPayment, loading } = useConfirmPayment();

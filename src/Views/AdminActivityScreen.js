@@ -17,7 +17,12 @@ const AdminActivityScreen = ({ route, navigation }) => {
   const { usersActivity, users } = useSelector((state) => state.project);
   const { userid } = route.params;
   const curentUser = userid && users.filter((dat) => dat.userid === userid);
-  console.log(usersActivity[0]);
+  const { isAuth } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (isAuth === null || !isAuth) {
+      navigation.replace("Auth");
+    }
+  }, []);
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.headingdiv}>

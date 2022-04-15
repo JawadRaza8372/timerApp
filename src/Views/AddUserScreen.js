@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, FlatList } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { w, h } from "react-native-responsiveness";
 import { screenBg, stopColor } from "../AppColors";
 import CustomInput from "../Components/CustomInput";
@@ -14,6 +14,11 @@ import { setUsers } from "../store/projectSlice";
 const AddUserScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { isAuth } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (isAuth === null || !isAuth) {
+      navigation.replace("Auth");
+    }
+  }, []);
   const [formData, setformData] = useState({
     Role: "User",
     lastName: "",

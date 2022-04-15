@@ -58,6 +58,9 @@ const TaskSettings = ({ navigation }) => {
   };
   useEffect(() => {
     getData();
+    if (isAuth === null || !isAuth) {
+      navigation.replace("Auth");
+    }
   }, []);
   useEffect(() => {
     storeData();

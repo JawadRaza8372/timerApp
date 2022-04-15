@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, FlatList } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { mainColor, screenBg } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
 import DayActivity from "../Components/DayActivity";
@@ -7,7 +7,12 @@ import { useSelector } from "react-redux";
 const ActivityScreen = ({ navigation }) => {
   const { usersActivity } = useSelector((state) => state.project);
   const { isAuth } = useSelector((state) => state.auth);
-  console.log("trying", isAuth);
+  useEffect(() => {
+    if (isAuth === null || !isAuth) {
+      navigation.replace("Auth");
+    }
+  }, []);
+
   return (
     <SafeAreaView style={styles.mainDiv}>
       <Text style={styles.heading}>Activity</Text>

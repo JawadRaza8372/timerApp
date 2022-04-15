@@ -66,6 +66,9 @@ const TimerScreen = ({ navigation }) => {
   };
   useEffect(() => {
     checkForDoc();
+    if (isAuth === null || !isAuth) {
+      navigation.replace("Auth");
+    }
   }, []);
 
   const activityManplt = async () => {
