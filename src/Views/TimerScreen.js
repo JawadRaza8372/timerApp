@@ -100,7 +100,12 @@ const TimerScreen = ({ navigation }) => {
       setselectedTask(taskname);
       if (taskname) {
         if (taskname.includes("end")) {
-          setcontinuing(false);
+          if (taskname === "end_break") {
+            setcontinuing(true);
+            setselectedTask("working");
+          } else {
+            setcontinuing(false);
+          }
         } else {
           setcontinuing(true);
         }

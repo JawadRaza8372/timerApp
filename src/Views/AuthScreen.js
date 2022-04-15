@@ -146,9 +146,9 @@ const AuthScreen = ({ navigation }) => {
                 })
               );
               if (doc.data().Role === "Employe") {
-                navigation.navigate("Client");
+                navigation.replace("Client");
               } else {
-                navigation.navigate("Admin");
+                navigation.replace("Admin");
               }
             } else {
               console.log("Wrong Credientials");
