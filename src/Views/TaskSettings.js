@@ -143,44 +143,44 @@ const TaskSettings = ({ navigation }) => {
                   value={isAuth.email}
                 />
               </View>
-              {/* {isAuth.Role === "Admin (Manager)" && ( */}
-              <View>
-                <Text style={styles.litheadig}>Login Type</Text>
-                <CustomLoginUser
-                  title={lloginLayout === "" ? "Default" : "Kiosk"}
-                  myData={[
-                    { title: "Default", value: "" },
-                    { title: "Kiosk", value: "Kiosk" },
-                  ]}
-                  selectionFun={(dat) => setlloginLayout(dat)}
-                />
-              </View>
-              {/* )} */}
-            </View>
-            {/* {isAuth.Role === "Admin (Manager)" && ( */}
-            <View style={styles.subscriptiondiv}>
-              <Text style={styles.litheadig}>
-                Informations about your subscription
-              </Text>
-              <View style={styles.contentDiv}>
-                <View style={{ width: "100%" }}>
-                  <View style={styles.tasks}>
-                    <Text>Your subscription is active</Text>
-                  </View>
-                  <View style={styles.tasks}>
-                    <Text>Number of users : {`${users.length}`}/10</Text>
-                  </View>
-                  <View style={styles.tasks}>
-                    <Text>Your role : {`${isAuth.Role}`}</Text>
-                  </View>
+              {isAuth.Role === "Admin (Manager)" && (
+                <View>
+                  <Text style={styles.litheadig}>Login Type</Text>
+                  <CustomLoginUser
+                    title={lloginLayout === "" ? "Default" : "Kiosk"}
+                    myData={[
+                      { title: "Default", value: "" },
+                      { title: "Kiosk", value: "Kiosk" },
+                    ]}
+                    selectionFun={(dat) => setlloginLayout(dat)}
+                  />
                 </View>
-                <CustomAuthBtn
-                  title={"Change Subscription"}
-                  onClick={() => navigation.navigate("Subscription")}
-                />
-              </View>
+              )}
             </View>
-            {/* )} */}
+            {isAuth.Role === "Admin (Manager)" && (
+              <View style={styles.subscriptiondiv}>
+                <Text style={styles.litheadig}>
+                  Informations about your subscription
+                </Text>
+                <View style={styles.contentDiv}>
+                  <View style={{ width: "100%" }}>
+                    <View style={styles.tasks}>
+                      <Text>Your subscription is active</Text>
+                    </View>
+                    <View style={styles.tasks}>
+                      <Text>Number of users : {`${users.length}`}/10</Text>
+                    </View>
+                    <View style={styles.tasks}>
+                      <Text>Your role : {`${isAuth.Role}`}</Text>
+                    </View>
+                  </View>
+                  <CustomAuthBtn
+                    title={"Change Subscription"}
+                    onClick={() => navigation.navigate("Subscription")}
+                  />
+                </View>
+              </View>
+            )}
           </View>
         </KeyboardAwareScrollView>
       </SafeAreaView>
