@@ -73,6 +73,7 @@ const AdminActivityAdmin = ({
       })
     );
     toggleModel();
+    alert("Updated Successfully.");
   };
   const savDelted = async () => {
     await activityManplt(
@@ -80,6 +81,7 @@ const AdminActivityAdmin = ({
         return index !== myindex;
       })
     );
+    alert("Deleted Successfully.");
   };
   return (
     <>

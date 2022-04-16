@@ -98,6 +98,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
       .then((doc) => {
         console.log("doc updated");
         reftch();
+        alert("User Information Updated.");
       });
   };
   const deltFunc = async () => {
@@ -108,6 +109,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
       .then(() => {
         console.log("done");
         reftch();
+        alert("User Deleted Successfully.");
       });
   };
   return (

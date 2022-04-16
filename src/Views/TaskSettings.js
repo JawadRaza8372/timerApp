@@ -70,33 +70,38 @@ const TaskSettings = ({ navigation }) => {
     setopenModel(!openModel);
   };
   const addTaskFunction = async () => {
-    const value = taskAdd.replace(" ", "_").toLowerCase();
-    await db
-      .collection("TaskMange")
-      .add({
-        Title: taskAdd.charAt(0).toUpperCase() + taskAdd.slice(1),
-        Value: value,
-      })
-      .then((doc) => {
-        settaskAdd("");
-        db.collection("TaskMange")
-          .get()
-          .then((querySnapshot) => {
-            if (querySnapshot.empty) {
-              console.log("notasks");
-            } else {
-              dispatch(
-                setTasks({
-                  tasks: querySnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    title: doc.data().Title,
-                    value: doc.data().Value,
-                  })),
-                })
-              );
-            }
-          });
-      });
+    if (taskAdd && taskAdd !== null && taskAdd !== "" && taskAdd.length >= 3) {
+      const value = taskAdd.replace(" ", "_").toLowerCase();
+      await db
+        .collection("TaskMange")
+        .add({
+          Title: taskAdd.charAt(0).toUpperCase() + taskAdd.slice(1),
+          Value: value,
+        })
+        .then((doc) => {
+          settaskAdd("");
+          db.collection("TaskMange")
+            .get()
+            .then((querySnapshot) => {
+              if (querySnapshot.empty) {
+                console.log("notasks");
+              } else {
+                dispatch(
+                  setTasks({
+                    tasks: querySnapshot.docs.map((doc) => ({
+                      id: doc.id,
+                      title: doc.data().Title,
+                      value: doc.data().Value,
+                    })),
+                  })
+                );
+              }
+            });
+          alert("Task Added");
+        });
+    } else {
+      alert("Please enter task name of atleast 3 letters");
+    }
   };
   return (
     <>

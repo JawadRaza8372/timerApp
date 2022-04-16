@@ -13,6 +13,7 @@ import { w, h } from "react-native-responsiveness";
 import { Entypo } from "@expo/vector-icons";
 import DayActivityAdmin from "../Components/DayActivityAdmin";
 import { useSelector } from "react-redux";
+import UnAvilData from "../Components/UnAvilData";
 const AdminActivityScreen = ({ route, navigation }) => {
   const { usersActivity, users } = useSelector((state) => state.project);
   const { userid } = route.params;
@@ -23,6 +24,7 @@ const AdminActivityScreen = ({ route, navigation }) => {
       navigation.replace("Auth");
     }
   }, []);
+  var mydataShow = usersActivity.filter((dat) => dat.userid === userid);
   return (
     <SafeAreaView style={styles.mainDiv}>
       <View style={styles.headingdiv}>
@@ -46,17 +48,21 @@ const AdminActivityScreen = ({ route, navigation }) => {
         <Text style={styles.username}>{curentUser[0].value}</Text>
       </TouchableOpacity>
 
-      <FlatList
-        data={usersActivity.filter((dat) => dat.userid === userid)}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <DayActivityAdmin
-            date={item.createdAt}
-            docid={item.id}
-            activityArry={item.activity}
-          />
-        )}
-      />
+      {mydataShow.length > 0 ? (
+        <FlatList
+          data={mydataShow}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <DayActivityAdmin
+              date={item.createdAt}
+              docid={item.id}
+              activityArry={item.activity}
+            />
+          )}
+        />
+      ) : (
+        <UnAvilData />
+      )}
     </SafeAreaView>
   );
 };

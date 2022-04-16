@@ -74,21 +74,33 @@ const AddUserScreen = ({ navigation }) => {
   };
 
   const adduserfun = async () => {
-    await db
-      .collection("authSystem")
-      .add(formData)
-      .then((dat) => {
-        console.log("done");
-        reftch();
+    if (
+      formData.Role !== "User" &&
+      formData.addBy &&
+      formData.email &&
+      formData.firstName &&
+      formData.lastName &&
+      formData.password.length === 5
+    ) {
+      await db
+        .collection("authSystem")
+        .add(formData)
+        .then((dat) => {
+          console.log("done");
+          reftch();
+        });
+      setformData({
+        Role: "User",
+        lastName: "",
+        firstName: "",
+        email: "",
+        password: "",
+        addBy: isAuth.userid,
       });
-    setformData({
-      Role: "User",
-      lastName: "",
-      firstName: "",
-      email: "",
-      password: "",
-      addBy: isAuth.userid,
-    });
+      alert("User Added");
+    } else {
+      alert("Please fill all fields.");
+    }
   };
 
   const role1 = [
@@ -183,6 +195,7 @@ const AddUserScreen = ({ navigation }) => {
                   };
                 })
               }
+              keyboardType="numeric"
             />
           </View>
 

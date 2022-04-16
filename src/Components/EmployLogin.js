@@ -27,9 +27,10 @@ const EmployLogin = ({ onSubmit, onOther }) => {
   useEffect(() => {
     if (formSubmit.password.length === 5) {
       onSubmit({ email: formSubmit.username, password: formSubmit.password });
+    } else {
+      alert("Password must contain 5 letters.");
     }
   }, [formSubmit]);
-  // const [inputpaswd, setinputpaswd] = useState("");
   const btnsArr = [
     {
       title: "1",
@@ -143,20 +144,6 @@ const EmployLogin = ({ onSubmit, onOther }) => {
         }),
     },
   ];
-  // const btnsArr = [
-  //   { title: "1", onPressfun: () => setinputpaswd(inputpaswd + "1") },
-  //   { title: "2", onPressfun: () => setinputpaswd(inputpaswd + "2") },
-  //   { title: "3", onPressfun: () => setinputpaswd(inputpaswd + "3") },
-  //   { title: "4", onPressfun: () => setinputpaswd(inputpaswd + "4") },
-  //   { title: "5", onPressfun: () => setinputpaswd(inputpaswd + "5") },
-  //   { title: "6", onPressfun: () => setinputpaswd(inputpaswd + "6") },
-  //   { title: "7", onPressfun: () => setinputpaswd(inputpaswd + "7") },
-  //   { title: "8", onPressfun: () => setinputpaswd(inputpaswd + "8") },
-  //   { title: "9", onPressfun: () => setinputpaswd(inputpaswd + "9") },
-  //   { title: " ", onPressfun: () => console.log(" ") },
-  //   { title: "0", onPressfun: () => setinputpaswd(inputpaswd + "0") },
-  //   { title: "Clear", onPressfun: () => setinputpaswd("") },
-  // ];
 
   return (
     <>
@@ -184,7 +171,6 @@ const EmployLogin = ({ onSubmit, onOther }) => {
           <Text style={styles.labl}>Password</Text>
           <CustomPaswdText iconName="lock" text={formSubmit.password} />
         </View>
-        <CustomAuthBtn title="Login" onClick={() => onSubmit(formSubmit)} />
       </View>
       <View style={styles.keyborddiv}>
         {btnsArr.map((dat, index) => (

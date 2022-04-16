@@ -16,11 +16,10 @@ import {
 } from "@stripe/stripe-react-native";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { inputBg, mainColor, screenBg } from "../AppColors";
-const API_URL = "http://localhost:6000";
+const API_URL = "http://localhost:3000";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Plans from "../Components/Plans";
-
 const MySubscription = ({ navigation }) => {
   const { isAuth } = useSelector((state) => state.auth);
   useEffect(() => {
@@ -37,83 +36,51 @@ const MySubscription = ({ navigation }) => {
     price: 0,
     usercapcity: 0,
   });
+  console.log(selectedPlan);
   const fetchPaymentIntentClientSecret = async () => {
-    // const response = await axios.post(`${API_URL}/create-payment-intent`, {
-    //   price: 1200,
-    // });
-    try {
-      const response1 = await fetch(`${API_URL}/buy`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          coin: "Bitcoin",
-          quantity: 1,
-          amount: 400,
-        }),
-      });
-      const response = await axios.post(`${API_URL}/buy`, {
-        coin: "Bitcoin",
-        quantity: 1,
-        amount: 400,
-      });
-      console.log("responce", response.json());
-      console.log("responce", response1.json());
-    } catch (error) {
-      alert(error.message);
-    }
-
-    // await fetch(`${SERVER_URL_HEROKU}/buy`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(),
-    // });
-
+    const response = await axios.post(`${API_URL}/create-payment-intent`, {
+      price: 1200,
+    });
     // const response = await fetch(, {
     //   method: "POST",
     //   headers: {
     //     "Content-Type": "application/json",
     //   },
     // });
-    // const { clientSecret, error } = await response.json();
-    // return { clientSecret, error };
+    const { clientSecret, error } = await response.json();
+    return { clientSecret, error };
   };
-
   const handlePayPress = async () => {
-    await fetchPaymentIntentClientSecret();
     //1.Gather the customer's billing information (e.g., email)
-    // if (!cardDetails?.complete || !email) {
-    //   Alert.alert("Please enter Complete card details and Email");
-    //   return;
-    // }
-    // const billingDetails = {
-    //   email: email,
-    // };
-    // //2.Fetch the intent client secret from the backend
-    // try {
-    //   const { clientSecret, error } = await fetchPaymentIntentClientSecret();
-    //   //2. confirm the payment
-    //   if (error) {
-    //     console.log("Unable to process payment");
-    //   } else {
-    //     const { paymentIntent, error } = await confirmPayment(clientSecret, {
-    //       type: "Card",
-    //       billingDetails: billingDetails,
-    //     });
-    //     if (error) {
-    //       alert(`Payment Confirmation Error ${error.message}`);
-    //     } else if (paymentIntent) {
-    //       alert("Payment Successful");
-    //       console.log("Payment successful ", paymentIntent);
-    //     }
-    //   }
-    // } catch (e) {
-    //   alert(`error ${e}`);
-    // }
-    // //3.Confirm the payment with the card details
+    if (!cardDetails?.complete || !email) {
+      Alert.alert("Please enter Complete card details and Email");
+      return;
+    }
+    const billingDetails = {
+      email: email,
+    };
+    //2.Fetch the intent client secret from the backend
+    try {
+      const { clientSecret, error } = await fetchPaymentIntentClientSecret();
+      //2. confirm the payment
+      if (error) {
+        console.log("Unable to process payment");
+      } else {
+        const { paymentIntent, error } = await confirmPayment(clientSecret, {
+          type: "Card",
+          billingDetails: billingDetails,
+        });
+        if (error) {
+          alert(`Payment Confirmation Error ${error.message}`);
+        } else if (paymentIntent) {
+          alert("Payment Successful");
+          console.log("Payment successful ", paymentIntent);
+        }
+      }
+    } catch (e) {
+      alert(`error ${e}`);
+    }
+    //3.Confirm the payment with the card details
   };
   const onPressFun = (data) => {
     setselectedPlan(data);
@@ -155,9 +122,7 @@ const MySubscription = ({ navigation }) => {
     </StripeProvider>
   );
 };
-
 export default MySubscription;
-
 const styles = StyleSheet.create({
   container: {
     width: "100%",
@@ -170,7 +135,6 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: inputBg,
-
     borderRadius: 8,
     fontSize: h("2%"),
     height: h("5%"),

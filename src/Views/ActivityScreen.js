@@ -4,6 +4,7 @@ import { mainColor, screenBg } from "../AppColors";
 import { w, h } from "react-native-responsiveness";
 import DayActivity from "../Components/DayActivity";
 import { useSelector } from "react-redux";
+import UnAvilData from "../Components/UnAvilData";
 const ActivityScreen = ({ navigation }) => {
   const { usersActivity } = useSelector((state) => state.project);
   const { isAuth } = useSelector((state) => state.auth);
@@ -12,20 +13,24 @@ const ActivityScreen = ({ navigation }) => {
       navigation.replace("Auth");
     }
   }, []);
-
+  let mydatashow = usersActivity.filter((dat) => dat.userid === isAuth.userid);
   return (
     <SafeAreaView style={styles.mainDiv}>
       <Text style={styles.heading}>Activity</Text>
       <Text style={styles.username}>
         {isAuth.firstName} {isAuth.lastName}
       </Text>
-      <FlatList
-        data={usersActivity.filter((dat) => dat.userid === isAuth.userid)}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <DayActivity date={item.createdAt} activityArry={item.activity} />
-        )}
-      />
+      {mydatashow.length > 0 ? (
+        <FlatList
+          data={mydatashow}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <DayActivity date={item.createdAt} activityArry={item.activity} />
+          )}
+        />
+      ) : (
+        <UnAvilData />
+      )}
     </SafeAreaView>
   );
 };
@@ -50,5 +55,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: mainColor,
     marginBottom: h("1.5%"),
+  },
+  nofounddiv: {
+    width: "100%",
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

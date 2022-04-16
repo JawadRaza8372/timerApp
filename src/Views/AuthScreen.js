@@ -129,12 +129,10 @@ const AuthScreen = ({ navigation }) => {
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.empty) {
-          console.log("user does not exist");
+          alert("User does not exist.");
         } else {
           querySnapshot.forEach((doc) => {
             if (doc.data().password === data?.password) {
-              console.log("Auth Suceess");
-
               dispatch(
                 setAuth({
                   auth: {
@@ -152,13 +150,14 @@ const AuthScreen = ({ navigation }) => {
                 navigation.replace("Admin");
               }
             } else {
-              console.log("Wrong Credientials");
+              alert("Wrong Credientials");
             }
           });
         }
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
+        alert(error.message);
       });
   };
   const { layout } = useSelector((state) => state.project);

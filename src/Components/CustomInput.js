@@ -18,6 +18,9 @@ const CustomInput = ({ iconName, placeholder, value, onChange }) => {
         value={value}
         onChangeText={onChange}
         placeholder={`${placeholder}`}
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoComplete="off"
       />
     </View>
   );
