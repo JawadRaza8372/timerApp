@@ -31,8 +31,9 @@ const AuthScreen = ({ navigation }) => {
       });
   };
   const checkForDoc = async () => {
-    var todayval = new Date().toLocaleDateString();
-    db.collection("DailyActivity")
+    var todayval = new Date().toDateString();
+    await db
+      .collection("DailyActivity")
       .orderBy("createdAt", "desc")
       .get()
       .then((querySnapshot) => {
@@ -55,7 +56,7 @@ const AuthScreen = ({ navigation }) => {
     if (isAuth.Role === "Employe") {
       await db
         .collection("DailyActivity")
-        .where("createdAt", "==", todayval)
+        .where("createdAt", "==", `${todayval}`)
         .get()
         .then((querySnapshot) => {
           if (querySnapshot.empty) {

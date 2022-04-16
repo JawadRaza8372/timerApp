@@ -86,8 +86,12 @@ const TimerScreen = ({ navigation }) => {
     }
   }, [newSelecteddata]);
   const startBtnFunct = async () => {
-    var today = new Date().toLocaleTimeString();
-    await setnewSelecteddata({ TaskName: selectedTask, taskTime: today });
+    if (selectedTask) {
+      var today = new Date().toLocaleTimeString();
+      await setnewSelecteddata({ TaskName: selectedTask, taskTime: today });
+    } else {
+      alert("Please select the task");
+    }
   };
   const validatebtnFunction = () => {
     startBtnFunct();
@@ -99,7 +103,8 @@ const TimerScreen = ({ navigation }) => {
         fetchTodayDoc.activity[fetchTodayDoc.activity.length - 1].TaskName;
       setselectedTask(taskname);
       if (taskname) {
-        if (taskname.includes("end")) {
+        var checkingtask = taskname.includes("end_");
+        if (checkingtask) {
           if (taskname === "end_break") {
             setcontinuing(true);
             setselectedTask("working");
@@ -133,81 +138,96 @@ const TimerScreen = ({ navigation }) => {
       }
     }
   }, [fetchTodayDoc]);
-  const check = new Date();
-  console.log("date1", check.toDateString());
-  console.log("date1", check.toLocaleDateString());
-  console.log("date1", check.getDate());
+  // const check = new Date();
+  // console.log("date1", check.toDateString());
+  // console.log("date1", check.toLocaleDateString());
+  // console.log("date1", check.getDate());
+  if (todayActivity) {
+    return (
+      <>
+        <SafeAreaView style={styles.mainDiv}>
+          <View style={styles.introdiv}>
+            <Text style={styles.head}>Timer</Text>
+            <View style={styles.datdiv}>
+              <Feather name="calendar" size={h("3.1%")} color="black" />
+              <Text style={styles.dattxt}>
+                {fetchTodayDoc.createdAt
+                  ? new Date(fetchTodayDoc.createdAt).toDateString()
+                  : new Date().toDateString()}
+              </Text>
+            </View>
+          </View>
 
-  return (
-    <SafeAreaView style={styles.mainDiv}>
-      <View style={styles.introdiv}>
-        <Text style={styles.head}>Timer</Text>
-        <View style={styles.datdiv}>
-          <Feather name="calendar" size={h("3.1%")} color="black" />
-          <Text style={styles.dattxt}>
-            {fetchTodayDoc.createdAt
-              ? new Date(fetchTodayDoc.createdAt).toDateString()
-              : new Date().toDateString()}
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.activitysel}>
-        <CustomLoginUser
-          title={selectedTask ? selectedTask.replace("_", " ") : "Select Task"}
-          istimer={true}
-          myData={tasks}
-          selectionFun={(dat) => setselectedTask(dat)}
-        />
-      </View>
-      <View
-        style={{
-          height: h("40%"),
-          width: "100%",
-          justifyContent: "center",
-        }}
-      >
-        <AnimatedTimeComp />
-      </View>
-      <View style={styles.activitysel}>
-        {continuing ? (
-          <CustomAuthBtn
-            istimer={true}
-            title={"Stop"}
-            bgColor={stopColor}
-            onClick={() => setismodal(!ismodal)}
-          />
-        ) : (
-          <CustomAuthBtn
-            istimer={true}
-            title={selectedTask.includes("end") ? "Validate" : "Start"}
-            bgColor={mainColor}
-            onClick={startBtnFunct}
-          />
-        )}
-      </View>
-      <View style={styles.txtcont}>
-        <Text style={styles.sechead}>Today’s total working time</Text>
-        <Text style={styles.firhead}>12:41:33</Text>
-      </View>
-      <CustomModel show={ismodal} toggleModal={() => setismodal(!ismodal)}>
-        <View style={styles.stopdiv}>
-          <Text style={styles.head}>Stop Reason</Text>
-          <CustomLoginUser
-            title={selectedTask ? selectedTask : "Select One"}
-            istimer={true}
-            myData={tasks.filter((dat) => dat.value !== selectedTask)}
-            selectionFun={(dat) => setselectedTask(dat)}
-          />
-          <CustomAuthBtn
-            title={"Validate"}
-            onClick={validatebtnFunction}
-            istimer={true}
-          />
-        </View>
-      </CustomModel>
-    </SafeAreaView>
-  );
+          <View style={styles.activitysel}>
+            <CustomLoginUser
+              title={
+                selectedTask ? selectedTask.replace("_", " ") : "Select Task"
+              }
+              istimer={true}
+              myData={tasks}
+              selectionFun={(dat) => setselectedTask(dat)}
+            />
+          </View>
+          <View
+            style={{
+              height: h("40%"),
+              width: "100%",
+              justifyContent: "center",
+            }}
+          >
+            <AnimatedTimeComp />
+          </View>
+          <View style={styles.activitysel}>
+            {continuing ? (
+              <CustomAuthBtn
+                istimer={true}
+                title={"Stop"}
+                bgColor={stopColor}
+                onClick={() => setismodal(!ismodal)}
+              />
+            ) : (
+              <CustomAuthBtn
+                istimer={true}
+                title={"Start"}
+                bgColor={mainColor}
+                onClick={startBtnFunct}
+              />
+            )}
+          </View>
+          <View style={styles.txtcont}>
+            <Text style={styles.sechead}>Today’s total working time</Text>
+            <Text style={styles.firhead}>12:41:33</Text>
+          </View>
+          <CustomModel show={ismodal} toggleModal={() => setismodal(!ismodal)}>
+            <View style={styles.stopdiv}>
+              <Text style={styles.head}>Stop Reason</Text>
+              <CustomLoginUser
+                title={
+                  selectedTask ? selectedTask.replace("_", " ") : "Select One"
+                }
+                istimer={true}
+                myData={tasks.filter((dat) => dat.value !== selectedTask)}
+                selectionFun={(dat) => setselectedTask(dat)}
+              />
+              <CustomAuthBtn
+                title={"Validate"}
+                onClick={validatebtnFunction}
+                istimer={true}
+              />
+            </View>
+          </CustomModel>
+        </SafeAreaView>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <SafeAreaView style={styles.mainDiv}>
+          <Text style={styles.head}>Laoding</Text>
+        </SafeAreaView>
+      </>
+    );
+  }
 };
 
 export default TimerScreen;

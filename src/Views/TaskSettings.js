@@ -143,19 +143,17 @@ const TaskSettings = ({ navigation }) => {
                   value={isAuth.email}
                 />
               </View>
-              {isAuth.Role === "Admin (Manager)" && (
-                <View>
-                  <Text style={styles.litheadig}>Login Type</Text>
-                  <CustomLoginUser
-                    title={lloginLayout === "" ? "Default" : "Kiosk"}
-                    myData={[
-                      { title: "Default", value: "" },
-                      { title: "Kiosk", value: "Kiosk" },
-                    ]}
-                    selectionFun={(dat) => setlloginLayout(dat)}
-                  />
-                </View>
-              )}
+              <View>
+                <Text style={styles.litheadig}>Login Type</Text>
+                <CustomLoginUser
+                  title={lloginLayout === "" ? "Default" : "Kiosk"}
+                  myData={[
+                    { title: "Default", value: "" },
+                    { title: "Kiosk", value: "Kiosk" },
+                  ]}
+                  selectionFun={(dat) => setlloginLayout(dat)}
+                />
+              </View>
             </View>
             {isAuth.Role === "Admin (Manager)" && (
               <View style={styles.subscriptiondiv}>
