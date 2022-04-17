@@ -1,11 +1,27 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { w, h } from "react-native-responsiveness";
 import { inputBg, mainColor } from "../AppColors";
 import { color } from "react-native-reanimated";
 const DayActivity = ({ date, activityArry }) => {
-  console.log("checking arry", activityArry);
+  const [actTime, setactTime] = useState({ hours: 0, mints: 0 });
+  useEffect(() => {
+    if (activityArry.length >= 2) {
+      const check =
+        new Date(
+          `${date} ${activityArry[activityArry.length - 1].taskTime}`
+        ).getTime() - new Date(`${date} ${activityArry[0].taskTime}`).getTime();
+      const sec = 1000;
+      const minut = sec * 60;
+      const hour = minut * 60;
+      const day = hour * 24;
+      const textmint = Math.floor((check % hour) / minut);
+      const texthour = Math.floor((check % day) / hour);
+      setactTime({ hours: texthour, mints: textmint });
+    }
+  }, []);
+
   return (
     <View style={styles.mainActDiv}>
       <View style={styles.datdiv}>
@@ -13,13 +29,16 @@ const DayActivity = ({ date, activityArry }) => {
         <Text style={styles.dattxt}>{date}</Text>
       </View>
       <View style={styles.contentdiv}>
-        {activityArry &&
-          activityArry.map((dat, index) => (
-            <View key={index} style={styles.activityinfo}>
-              <Text style={styles.activityName}>{dat.TaskName}</Text>
-              <Text style={styles.activityTime}>{dat.taskTime}</Text>
-            </View>
-          ))}
+        {activityArry && (
+          <ScrollView nestedScrollEnabled={true}>
+            {activityArry.map((dat, index) => (
+              <View key={index} style={styles.activityinfo}>
+                <Text style={styles.activityName}>{dat.TaskName}</Text>
+                <Text style={styles.activityTime}>{dat.taskTime}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        )}
         {activityArry.length === 0 && (
           <View
             style={{
@@ -34,10 +53,19 @@ const DayActivity = ({ date, activityArry }) => {
           </View>
         )}
       </View>
-      <View style={styles.txtcont}>
-        <Text style={styles.sechead}>Today’s total working time</Text>
-        <Text style={styles.firhead}>7 hr 45 mins</Text>
-      </View>
+      {activityArry.length >= 2 && (
+        <View style={styles.txtcont}>
+          <Text style={styles.sechead}>Today’s total working time</Text>
+          <Text style={styles.firhead}>
+            {actTime.hours === 0
+              ? ""
+              : actTime.hours === 1
+              ? `${actTime.hours} Hour `
+              : `${actTime.hours} Hours `}
+            {actTime.mints === 0 ? "" : `${actTime.mints} minutes`}
+          </Text>
+        </View>
+      )}
     </View>
   );
 };

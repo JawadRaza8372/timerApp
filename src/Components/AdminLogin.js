@@ -15,6 +15,13 @@ import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scr
 const AdminLogin = ({ onSubmit }) => {
   const [isRemember, setisRemember] = useState(false);
   const [formSubmit, setformSubmit] = useState({ email: "", password: "" });
+  const submission = () => {
+    if (formSubmit.email && formSubmit.password) {
+      onSubmit(formSubmit);
+    } else {
+      alert("Please Fill All the Fields.");
+    }
+  };
   return (
     <KeyboardAwareScrollView>
       <View style={styles.logindivv}>
@@ -52,6 +59,7 @@ const AdminLogin = ({ onSubmit }) => {
                   };
                 })
               }
+              maxLength={5}
             />
           </View>
           <View style={styles.btnsDiv}>
@@ -72,7 +80,7 @@ const AdminLogin = ({ onSubmit }) => {
               <Text style={{ color: mainColor }}>Forgot Your Password</Text>
             </TouchableOpacity>
           </View>
-          <CustomAuthBtn title="Login" onClick={() => onSubmit(formSubmit)} />
+          <CustomAuthBtn title="Login" onClick={submission} />
         </View>
       </View>
     </KeyboardAwareScrollView>

@@ -74,32 +74,37 @@ const AddUserScreen = ({ navigation }) => {
   };
 
   const adduserfun = async () => {
-    if (
-      formData.Role !== "User" &&
-      formData.addBy &&
-      formData.email &&
-      formData.firstName &&
-      formData.lastName &&
-      formData.password.length === 5
-    ) {
-      await db
-        .collection("authSystem")
-        .add(formData)
-        .then((dat) => {
-          console.log("done");
-          reftch();
-        });
-      setformData({
-        Role: "User",
-        lastName: "",
-        firstName: "",
-        email: "",
-        password: "",
-        addBy: isAuth.userid,
-      });
-      alert("User Added");
+    if (formData.Role !== "User") {
+      if (formData.email.length >= 5) {
+        if (formData.firstName && formData.lastName) {
+          if (formData.password.length >= 5) {
+            await db
+              .collection("authSystem")
+              .add(formData)
+              .then((dat) => {
+                console.log("done");
+                reftch();
+              });
+            setformData({
+              Role: "User",
+              lastName: "",
+              firstName: "",
+              email: "",
+              password: "",
+              addBy: isAuth.userid,
+            });
+            alert("User Added");
+          } else {
+            alert("Please enter password of 5 letters");
+          }
+        } else {
+          alert("Please enter valid First and last name");
+        }
+      } else {
+        alert("Please Enter Vaild email");
+      }
     } else {
-      alert("Please fill all fields.");
+      alert("Please select a user role");
     }
   };
 
@@ -196,6 +201,7 @@ const AddUserScreen = ({ navigation }) => {
                 })
               }
               keyboardType="numeric"
+              maxLength={5}
             />
           </View>
 

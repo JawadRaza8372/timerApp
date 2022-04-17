@@ -30,28 +30,28 @@ const AdminActivityAdmin = ({
   const toggleModel = () => {
     setopenModel(!openModel);
   };
-  const refetch = async () => {
-    await db
-      .collection("DailyActivity")
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          dispatch(setUserActivity({ usersActivity: [] }));
-        } else {
-          dispatch(
-            setUserActivity({
-              usersActivity: querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                createdAt: doc.data().createdAt,
-                userid: doc.data().userid,
-                activity: doc.data().activity,
-              })),
-            })
-          );
-        }
-      });
-  };
+  // const refetch = async () => {
+  //   await db
+  //     .collection("DailyActivity")
+  //     .orderBy("createdAt", "desc")
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       if (querySnapshot.empty) {
+  //         dispatch(setUserActivity({ usersActivity: [] }));
+  //       } else {
+  //         dispatch(
+  //           setUserActivity({
+  //             usersActivity: querySnapshot.docs.map((doc) => ({
+  //               id: doc.id,
+  //               createdAt: doc.data().createdAt,
+  //               userid: doc.data().userid,
+  //               activity: doc.data().activity,
+  //             })),
+  //           })
+  //         );
+  //       }
+  //     });
+  // };
   const activityManplt = async (value) => {
     await db
       .collection("DailyActivity")
@@ -59,7 +59,7 @@ const AdminActivityAdmin = ({
       .update({ activity: value })
       .then((doc) => {
         console.log("updated");
-        refetch();
+        // refetch();
       });
   };
   const savEdited = async () => {

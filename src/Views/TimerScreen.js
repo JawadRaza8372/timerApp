@@ -21,6 +21,7 @@ const TimerScreen = ({ navigation }) => {
     taskTime: "",
   });
   const { tasks, todayActivity } = useSelector((state) => state.project);
+  const [todayTime, settodayTime] = useState({ hours: 0, mints: 0 });
   const { isAuth } = useSelector((state) => state.auth);
   const [fetchTodayDoc, setfetchTodayDoc] = useState({
     id: null,
@@ -31,22 +32,26 @@ const TimerScreen = ({ navigation }) => {
   const checkForDoc = async () => {
     var todayval = new Date().toDateString();
     if (isAuth.Role === "Employe") {
-      await db
-        .collection("DailyActivity")
-        .where("createdAt", "==", todayval)
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.docs.map((doc) => {
-            if (doc.data().userid === isAuth.userid) {
-              console.log("found");
-              dispatch(setTodayActivity({ todayActivity: doc.id }));
-              gettodaydoc(doc.id);
-            } else {
-              console.log("notfound");
-            }
+      if (todayActivity === null) {
+        await db
+          .collection("DailyActivity")
+          .where("createdAt", "==", todayval)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.docs.map((doc) => {
+              if (doc.data().userid === isAuth.userid) {
+                console.log("found");
+                dispatch(setTodayActivity({ todayActivity: doc.id }));
+                gettodaydoc(doc.id);
+              } else {
+                console.log("notfound");
+              }
+            });
+            // console.log("checking for data ", newdata.id);
           });
-          // console.log("checking for data ", newdata.id);
-        });
+      } else {
+        gettodaydoc(todayActivity);
+      }
     }
   };
   const gettodaydoc = async (value) => {
@@ -115,7 +120,7 @@ const TimerScreen = ({ navigation }) => {
           setcontinuing(true);
         }
       }
-      if (fetchTodayDoc.activity.length > 1) {
+      if (fetchTodayDoc.activity.length >= 2) {
         const check =
           new Date(
             `${fetchTodayDoc.createdAt} ${
@@ -125,16 +130,13 @@ const TimerScreen = ({ navigation }) => {
           new Date(
             `${fetchTodayDoc.createdAt} ${fetchTodayDoc.activity[0].taskTime}`
           ).getTime();
-        console.log("checking two wala", check);
-      }
-      {
-        const check =
-          new Date(
-            `${fetchTodayDoc.createdAt} ${
-              fetchTodayDoc.activity[fetchTodayDoc.activity.length - 1].taskTime
-            }`
-          ).getTime() - new Date().getTime();
-        console.log("checking one Wla", check);
+        const sec = 1000;
+        const minut = sec * 60;
+        const hour = minut * 60;
+        const day = hour * 24;
+        const textmint = Math.floor((check % hour) / minut);
+        const texthour = Math.floor((check % day) / hour);
+        settodayTime({ hours: texthour, mints: textmint });
       }
     }
   }, [fetchTodayDoc]);
@@ -194,10 +196,19 @@ const TimerScreen = ({ navigation }) => {
               />
             )}
           </View>
-          <View style={styles.txtcont}>
-            <Text style={styles.sechead}>Today’s total working time</Text>
-            <Text style={styles.firhead}>12:41:33</Text>
-          </View>
+          {fetchTodayDoc.activity.length >= 2 && (
+            <View style={styles.txtcont}>
+              <Text style={styles.sechead}>Today’s total working time</Text>
+              <Text style={styles.firhead}>
+                {todayTime.hours === 0
+                  ? ""
+                  : todayTime.hours === 1
+                  ? `${todayTime.hours} Hour `
+                  : `${todayTime.hours} Hours `}
+                {todayTime.mints === 0 ? "" : `${todayTime.mints} minutes`}
+              </Text>
+            </View>
+          )}
           <CustomModel show={ismodal} toggleModal={() => setismodal(!ismodal)}>
             <View style={styles.stopdiv}>
               <Text style={styles.head}>Stop Reason</Text>

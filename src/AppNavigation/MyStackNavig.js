@@ -6,8 +6,41 @@ import CustomBottomTabAdmin from "./CustomBottomTabAdmin";
 import AdminActivityScreen from "../Views/AdminActivityScreen";
 import UpdateUserScreen from "../Views/UpdateUserScreen";
 import MySubscription from "../Views/MySubscription";
+import { useEffect } from "react";
+import { db } from "../DataBase/Configer";
+import { setUserActivity, setTasks } from "../store/projectSlice";
+import { useDispatch } from "react-redux";
 const Stack = createStackNavigator();
 export default function MyStackNavig() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    db.collection("TaskMange").onSnapshot((snapshot) => {
+      dispatch(
+        setTasks({
+          tasks: snapshot.docs.map((doc) => ({
+            id: doc.id,
+            title: doc.data().Title,
+            value: doc.data().Value,
+          })),
+        })
+      );
+    });
+    db.collection("DailyActivity")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snapshot) => {
+        dispatch(
+          setUserActivity({
+            usersActivity: snapshot.docs.map((doc) => ({
+              id: doc.id,
+              createdAt: doc.data().createdAt,
+              userid: doc.data().userid,
+              activity: doc.data().activity,
+            })),
+          })
+        );
+      });
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>

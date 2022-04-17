@@ -21,6 +21,7 @@ import CustomLoginUser from "../Components/CustomLoginUser";
 import { useDispatch, useSelector } from "react-redux";
 import { setTasks, setLayout } from "../store/projectSlice";
 import { db } from "../DataBase/Configer";
+import { LoadingData } from "../Components/UnAvilData";
 const TaskSettings = ({ navigation }) => {
   const [openModel, setopenModel] = useState(false);
   const [isRemember, setisRemember] = useState(false);
@@ -80,23 +81,6 @@ const TaskSettings = ({ navigation }) => {
         })
         .then((doc) => {
           settaskAdd("");
-          db.collection("TaskMange")
-            .get()
-            .then((querySnapshot) => {
-              if (querySnapshot.empty) {
-                console.log("notasks");
-              } else {
-                dispatch(
-                  setTasks({
-                    tasks: querySnapshot.docs.map((doc) => ({
-                      id: doc.id,
-                      title: doc.data().Title,
-                      value: doc.data().Value,
-                    })),
-                  })
-                );
-              }
-            });
           alert("Task Added");
         });
     } else {
@@ -113,7 +97,7 @@ const TaskSettings = ({ navigation }) => {
               <Text style={styles.litheadig}>Tasks</Text>
               <View style={styles.tasksCont}>
                 <ScrollView>
-                  {tasks &&
+                  {tasks.length > 0 ? (
                     tasks.map((dat) => (
                       <TouchableOpacity
                         onPress={toggleModelf}
@@ -122,7 +106,10 @@ const TaskSettings = ({ navigation }) => {
                       >
                         <Text>{dat.title}</Text>
                       </TouchableOpacity>
-                    ))}
+                    ))
+                  ) : (
+                    <LoadingData />
+                  )}
 
                   <View style={styles.addtasks}>
                     <TextInput

@@ -11,6 +11,7 @@ import { w, h } from "react-native-responsiveness";
 import { inputBg, mainColor, screenBg, stopColor } from "../AppColors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { LoadingData } from "../Components/UnAvilData";
 const Dashbord = ({ navigation }) => {
   const { users } = useSelector((state) => state.project);
 
@@ -26,24 +27,28 @@ const Dashbord = ({ navigation }) => {
       <Text style={styles.heading}>Dashbord</Text>
       <View style={styles.filldiv}>
         <View style={styles.contentShow}>
-          <FlatList
-            data={users}
-            keyExtractor={(item) => item.userid}
-            renderItem={({ item }) => (
-              <>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("adminActivity", {
-                      userid: item.userid,
-                    })
-                  }
-                  style={styles.usermain}
-                >
-                  <Text>{item.value}</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          />
+          {users.length > 0 ? (
+            <FlatList
+              data={users}
+              keyExtractor={(item) => item.userid}
+              renderItem={({ item }) => (
+                <>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("adminActivity", {
+                        userid: item.userid,
+                      })
+                    }
+                    style={styles.usermain}
+                  >
+                    <Text>{item.value}</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            />
+          ) : (
+            <LoadingData />
+          )}
         </View>
       </View>
     </SafeAreaView>

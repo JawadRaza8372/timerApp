@@ -19,6 +19,7 @@ import { db } from "../DataBase/Configer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector, useDispatch } from "react-redux";
 import { setUsers } from "../store/projectSlice";
+import { LoadingData } from "../Components/UnAvilData";
 const UpdateUserScreen = ({ route, navigation }) => {
   const { userid } = route.params;
   const { isAuth } = useSelector((state) => state.auth);
@@ -91,15 +92,31 @@ const UpdateUserScreen = ({ route, navigation }) => {
     }
   }, []);
   const updateFunct = async () => {
-    await db
-      .collection("authSystem")
-      .doc(userid)
-      .update(formData)
-      .then((doc) => {
-        console.log("doc updated");
-        reftch();
-        alert("User Information Updated.");
-      });
+    if (formData.Role !== "User") {
+      if (formData.email.length >= 5) {
+        if (formData.firstName && formData.lastName) {
+          if (formData.password.length >= 5) {
+            await db
+              .collection("authSystem")
+              .doc(userid)
+              .update(formData)
+              .then((doc) => {
+                console.log("doc updated");
+                reftch();
+                alert("User Information Updated.");
+              });
+          } else {
+            alert("Please enter password of 5 letters");
+          }
+        } else {
+          alert("Please enter valid First and last name");
+        }
+      } else {
+        alert("Please Enter Vaild email");
+      }
+    } else {
+      alert("Please select a user role");
+    }
   };
   const deltFunc = async () => {
     await db
@@ -126,99 +143,110 @@ const UpdateUserScreen = ({ route, navigation }) => {
           <Entypo name="chevron-left" size={h("5%")} color="black" />
         </TouchableOpacity>
       </View>
-      <KeyboardAwareScrollView>
-        <View style={styles.inputs}>
-          <View>
-            <Text style={styles.labl}>Role</Text>
+      {formData.Role &&
+      formData.email &&
+      formData.email &&
+      formData.firstName &&
+      formData.lastName &&
+      formData.password ? (
+        <KeyboardAwareScrollView>
+          <View style={styles.inputs}>
+            <View>
+              <Text style={styles.labl}>Role</Text>
 
-            <CustomLoginUser
-              title={formData.Role}
-              myData={[
-                { title: "Admin (Manager)", value: "Admin (Manager)" },
-                { title: "Employe", value: "Employe" },
-              ]}
-              selectionFun={(dat) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    Role: dat,
-                  };
-                })
-              }
+              <CustomLoginUser
+                title={formData.Role}
+                myData={[
+                  { title: "Admin (Manager)", value: "Admin (Manager)" },
+                  { title: "Employe", value: "Employe" },
+                ]}
+                selectionFun={(dat) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      Role: dat,
+                    };
+                  })
+                }
+              />
+            </View>
+            <View>
+              <Text style={styles.labl}>Last Name</Text>
+
+              <CustomInput
+                placeholder={"Doe"}
+                value={formData.lastName}
+                onChange={(text) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      lastName: text,
+                    };
+                  })
+                }
+              />
+            </View>
+            <View>
+              <Text style={styles.labl}>First Name</Text>
+
+              <CustomInput
+                placeholder={"Jhon"}
+                value={formData.firstName}
+                onChange={(text) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      firstName: text,
+                    };
+                  })
+                }
+              />
+            </View>
+            <View>
+              <Text style={styles.labl}>Email</Text>
+
+              <CustomInput
+                placeholder={"email@exapmle.com"}
+                value={formData.email}
+                onChange={(text) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      email: text,
+                    };
+                  })
+                }
+              />
+            </View>
+            <View>
+              <Text style={styles.labl}>Password</Text>
+
+              <CustomPaswdInput
+                value={formData.password}
+                onChange={(text) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      password: text,
+                    };
+                  })
+                }
+                keyboardType="numeric"
+                maxLength={5}
+              />
+            </View>
+
+            <CustomAuthBtn title="Update" onClick={updateFunct} />
+            <CustomAuthBtn
+              bgColor={stopColor}
+              title="Delete"
+              onClick={deltFunc}
             />
           </View>
-          <View>
-            <Text style={styles.labl}>Last Name</Text>
-
-            <CustomInput
-              placeholder={"Doe"}
-              value={formData.lastName}
-              onChange={(text) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    lastName: text,
-                  };
-                })
-              }
-            />
-          </View>
-          <View>
-            <Text style={styles.labl}>First Name</Text>
-
-            <CustomInput
-              placeholder={"Jhon"}
-              value={formData.firstName}
-              onChange={(text) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    firstName: text,
-                  };
-                })
-              }
-            />
-          </View>
-          <View>
-            <Text style={styles.labl}>Email</Text>
-
-            <CustomInput
-              placeholder={"email@exapmle.com"}
-              value={formData.email}
-              onChange={(text) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    email: text,
-                  };
-                })
-              }
-            />
-          </View>
-          <View>
-            <Text style={styles.labl}>Password</Text>
-
-            <CustomPaswdInput
-              value={formData.password}
-              onChange={(text) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    password: text,
-                  };
-                })
-              }
-            />
-          </View>
-
-          <CustomAuthBtn title="Update" onClick={updateFunct} />
-          <CustomAuthBtn
-            bgColor={stopColor}
-            title="Delete"
-            onClick={deltFunc}
-          />
-        </View>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      ) : (
+        <LoadingData />
+      )}
     </SafeAreaView>
   );
 };

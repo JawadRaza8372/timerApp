@@ -13,7 +13,8 @@ import { w, h } from "react-native-responsiveness";
 import { Entypo } from "@expo/vector-icons";
 import DayActivityAdmin from "../Components/DayActivityAdmin";
 import { useSelector } from "react-redux";
-import UnAvilData from "../Components/UnAvilData";
+import UnAvilData, { LoadingData } from "../Components/UnAvilData";
+import { current } from "@reduxjs/toolkit";
 const AdminActivityScreen = ({ route, navigation }) => {
   const { usersActivity, users } = useSelector((state) => state.project);
   const { userid } = route.params;
@@ -40,28 +41,36 @@ const AdminActivityScreen = ({ route, navigation }) => {
           <Entypo name="chevron-left" size={h("5%")} color="black" />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("UpdateUserAdmin", { userid: userid })
-        }
-      >
-        <Text style={styles.username}>{curentUser[0].value}</Text>
-      </TouchableOpacity>
-
-      {mydataShow.length > 0 ? (
-        <FlatList
-          data={mydataShow}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <DayActivityAdmin
-              date={item.createdAt}
-              docid={item.id}
-              activityArry={item.activity}
-            />
-          )}
-        />
+      {curentUser.length > 0 ? (
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("UpdateUserAdmin", { userid: userid })
+          }
+        >
+          <Text style={styles.username}>{curentUser[0].value}</Text>
+        </TouchableOpacity>
       ) : (
-        <UnAvilData />
+        <LoadingData />
+      )}
+
+      {usersActivity ? (
+        mydataShow.length > 0 ? (
+          <FlatList
+            data={mydataShow}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <DayActivityAdmin
+                date={item.createdAt}
+                docid={item.id}
+                activityArry={item.activity}
+              />
+            )}
+          />
+        ) : (
+          <UnAvilData />
+        )
+      ) : (
+        <LoadingData />
       )}
     </SafeAreaView>
   );

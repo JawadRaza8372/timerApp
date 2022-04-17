@@ -4,8 +4,9 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { w, h } from "react-native-responsiveness";
 import { inputBg, mainColor, screenBg } from "../AppColors";
@@ -18,9 +19,26 @@ import CustomAuthBtn from "./CustomAuthBtn";
 import AdminActivityAdmin from "./AdminActivityAdmin";
 const DayActivityAdmin = ({ date, activityArry, docid }) => {
   const [openModel, setopenModel] = useState(false);
+  const [actTime, setactTime] = useState({ hours: 0, mints: 0 });
+
   const toggleModel = () => {
     setopenModel(!openModel);
   };
+  useEffect(() => {
+    if (activityArry.length >= 2) {
+      const check =
+        new Date(
+          `${date} ${activityArry[activityArry.length - 1].taskTime}`
+        ).getTime() - new Date(`${date} ${activityArry[0].taskTime}`).getTime();
+      const sec = 1000;
+      const minut = sec * 60;
+      const hour = minut * 60;
+      const day = hour * 24;
+      const textmint = Math.floor((check % hour) / minut);
+      const texthour = Math.floor((check % day) / hour);
+      setactTime({ hours: texthour, mints: textmint });
+    }
+  }, []);
   return (
     <>
       <View style={styles.mainActDiv}>
@@ -29,17 +47,21 @@ const DayActivityAdmin = ({ date, activityArry, docid }) => {
           <Text style={styles.dattxt}>{date}</Text>
         </View>
         <View style={styles.contentdiv}>
-          {activityArry &&
-            activityArry.map((dat, index) => (
-              <AdminActivityAdmin
-                TaskName={dat.TaskName}
-                taskTime={dat.taskTime}
-                docid={docid}
-                key={index}
-                myindex={index}
-                fullArry={activityArry}
-              />
-            ))}
+          {activityArry && (
+            <ScrollView nestedScrollEnabled={true}>
+              {activityArry.map((dat, index) => (
+                <AdminActivityAdmin
+                  TaskName={dat.TaskName}
+                  taskTime={dat.taskTime}
+                  docid={docid}
+                  key={index}
+                  myindex={index}
+                  fullArry={activityArry}
+                />
+              ))}
+            </ScrollView>
+          )}
+
           {activityArry.length === 0 && (
             <View
               style={{
@@ -54,10 +76,19 @@ const DayActivityAdmin = ({ date, activityArry, docid }) => {
             </View>
           )}
         </View>
-        <View style={styles.txtcont}>
-          <Text style={styles.sechead}>Today’s total working time</Text>
-          <Text style={styles.firhead}>7 hr 45 mins</Text>
-        </View>
+        {activityArry.length >= 2 && (
+          <View style={styles.txtcont}>
+            <Text style={styles.sechead}>Today’s total working time</Text>
+            <Text style={styles.firhead}>
+              {actTime.hours === 0
+                ? ""
+                : actTime.hours === 1
+                ? `${actTime.hours} Hour `
+                : `${actTime.hours} Hours `}
+              {actTime.mints === 0 ? "" : `${actTime.mints} minutes`}
+            </Text>
+          </View>
+        )}
       </View>
       <CustomModel show={openModel} toggleModal={toggleModel}>
         <View style={styles.modelDiv}>

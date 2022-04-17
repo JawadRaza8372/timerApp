@@ -16,6 +16,8 @@ import {
 } from "../store/projectSlice";
 const AuthScreen = ({ navigation }) => {
   const { isAuth } = useSelector((state) => state.auth);
+  const { usersActivity } = useSelector((state) => state.project);
+
   const dispatch = useDispatch();
   const cresteNewdoc = async () => {
     await db
@@ -32,44 +34,13 @@ const AuthScreen = ({ navigation }) => {
   };
   const checkForDoc = async () => {
     var todayval = new Date().toDateString();
-    await db
-      .collection("DailyActivity")
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          dispatch(setUserActivity({ usersActivity: [] }));
-        } else {
-          dispatch(
-            setUserActivity({
-              usersActivity: querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                createdAt: doc.data().createdAt,
-                userid: doc.data().userid,
-                activity: doc.data().activity,
-              })),
-            })
-          );
-        }
-      });
-
     if (isAuth.Role === "Employe") {
-      await db
-        .collection("DailyActivity")
-        .where("createdAt", "==", `${todayval}`)
-        .get()
-        .then((querySnapshot) => {
-          if (querySnapshot.empty) {
-            cresteNewdoc();
-          } else {
-            const newdata = querySnapshot.docs.filter(
-              (doc) => doc.data().userid === isAuth.userid
-            );
-            if (newdata.length === 0) {
-              cresteNewdoc();
-            }
-          }
-        });
+      const checkTodayDoc = usersActivity.filter(
+        (dat) => dat.userid === isAuth.userid && dat.createdAt === todayval
+      );
+      if (checkTodayDoc.length === 0) {
+        cresteNewdoc();
+      }
     }
   };
   const getData = async () => {
@@ -98,67 +69,88 @@ const AuthScreen = ({ navigation }) => {
       // error reading value
     }
   };
-  const getTasks = async () => {
-    db.collection("TaskMange")
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          console.log("notasks");
-        } else {
-          dispatch(
-            setTasks({
-              tasks: querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                title: doc.data().Title,
-                value: doc.data().Value,
-              })),
-            })
-          );
-        }
-      });
-  };
   useEffect(() => {
     getData();
-    getTasks();
     getEmployLoginData();
   }, []);
   const loginFunct = async (data) => {
-    await db
-      .collection("authSystem")
-      .where("email", "==", `${data?.email}`)
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          alert("User does not exist.");
-        } else {
-          querySnapshot.forEach((doc) => {
-            if (doc.data().password === data?.password) {
-              dispatch(
-                setAuth({
-                  auth: {
-                    userid: doc.id,
-                    email: doc.data().email,
-                    lastName: doc.data().lastName,
-                    firstName: doc.data().firstName,
-                    Role: doc.data().Role,
-                  },
-                })
-              );
-              if (doc.data().Role === "Employe") {
-                navigation.replace("Client");
+    if (data.email && data.password) {
+      if (data.email.length >= 5) {
+        if (data.password.length >= 5) {
+          await db
+            .collection("authSystem")
+            .where("email", "==", `${data?.email}`)
+            .onSnapshot((snapshot) => {
+              if (snapshot.empty) {
+                alert("User does not exist.");
               } else {
-                navigation.replace("Admin");
+                snapshot.forEach((doc) => {
+                  if (doc.data().password === data?.password) {
+                    dispatch(
+                      setAuth({
+                        auth: {
+                          userid: doc.id,
+                          email: doc.data().email,
+                          lastName: doc.data().lastName,
+                          firstName: doc.data().firstName,
+                          Role: doc.data().Role,
+                        },
+                      })
+                    );
+                    if (doc.data().Role === "Employe") {
+                      navigation.replace("Client");
+                    } else {
+                      navigation.replace("Admin");
+                    }
+                  } else {
+                    alert("Wrong Credientials");
+                  }
+                });
               }
-            } else {
-              alert("Wrong Credientials");
-            }
-          });
+            });
+          await db
+            .collection("authSystem")
+            .where("email", "==", `${data?.email}`)
+            .get()
+            .then((querySnapshot) => {
+              if (querySnapshot.empty) {
+                alert("User does not exist.");
+              } else {
+                querySnapshot.forEach((doc) => {
+                  if (doc.data().password === data?.password) {
+                    dispatch(
+                      setAuth({
+                        auth: {
+                          userid: doc.id,
+                          email: doc.data().email,
+                          lastName: doc.data().lastName,
+                          firstName: doc.data().firstName,
+                          Role: doc.data().Role,
+                        },
+                      })
+                    );
+                    if (doc.data().Role === "Employe") {
+                      navigation.replace("Client");
+                    } else {
+                      navigation.replace("Admin");
+                    }
+                  } else {
+                    alert("Wrong Credientials");
+                  }
+                });
+              }
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+              alert(error.message);
+            });
+        } else {
+          alert("Please Enter Password of atleast 5 letters");
         }
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-        alert(error.message);
-      });
+      } else {
+        alert("Please Enter valid Email");
+      }
+    }
   };
   const { layout } = useSelector((state) => state.project);
   useEffect(() => {

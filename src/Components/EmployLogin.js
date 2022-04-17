@@ -25,113 +25,157 @@ const EmployLogin = ({ onSubmit, onOther }) => {
     password: "",
   });
   useEffect(() => {
-    if (formSubmit.password.length === 5) {
-      onSubmit({ email: formSubmit.username, password: formSubmit.password });
-    } else {
-      alert("Password must contain 5 letters.");
+    if (formSubmit.password && formSubmit.username) {
+      if (formSubmit.password.length === 5) {
+        onSubmit({
+          email: formSubmit.username,
+          password: formSubmit.password,
+        });
+      }
     }
   }, [formSubmit]);
+
   const btnsArr = [
     {
       title: "1",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "1",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "1",
+            };
+          });
+        }
+      },
     },
     {
       title: "2",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "2",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "2",
+            };
+          });
+        }
+      },
     },
     {
       title: "3",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "3",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "3",
+            };
+          });
+        }
+      },
     },
     {
       title: "4",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "4",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "4",
+            };
+          });
+        }
+      },
     },
     {
       title: "5",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "5",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "5",
+            };
+          });
+        }
+      },
     },
     {
       title: "6",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "6",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "6",
+            };
+          });
+        }
+      },
     },
     {
       title: "7",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "7",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "7",
+            };
+          });
+        }
+      },
     },
     {
       title: "8",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "8",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "8",
+            };
+          });
+        }
+      },
     },
     {
       title: "9",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "9",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "9",
+            };
+          });
+        }
+      },
     },
     { title: " ", onPressfun: () => console.log(" ") },
     {
       title: "0",
-      onPressfun: () =>
-        setformSubmit((prevalue) => {
-          return {
-            ...prevalue,
-            password: formSubmit.password + "0",
-          };
-        }),
+      onPressfun: () => {
+        if (formSubmit.password.length >= 5) {
+        } else {
+          setformSubmit((prevalue) => {
+            return {
+              ...prevalue,
+              password: formSubmit.password + "0",
+            };
+          });
+        }
+      },
     },
     {
       title: "Clear",
