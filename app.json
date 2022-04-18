@@ -27,6 +27,6 @@
     "web": {
       "favicon": "./assets/Logo.png"
     },
-    "plugins": ["expo-splash-screen", "expo-updates"]
+    "plugins": []
   }
 }
