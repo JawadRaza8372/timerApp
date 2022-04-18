@@ -24,16 +24,15 @@ const ActivityScreen = ({ navigation }) => {
   }, []);
   const dispatch = useDispatch();
   const logoutFun = () => {
-    dispatch(setAuth({ isAuth: null }));
+    dispatch(setAuth({ auth: null }));
   };
-  let mydatashow =
-    isAuth !== null &&
-    isAuth.userid &&
-    usersActivity.length > 0 &&
-    usersActivity.filter((dat) => dat.userid === isAuth.userid);
-  if (isAuth === null) {
-    navigation.replace("Auth");
-  } else {
+
+  if (isAuth !== null && isAuth) {
+    let mydatashow =
+      isAuth !== null &&
+      isAuth?.userid &&
+      usersActivity.length > 0 &&
+      usersActivity.filter((dat) => dat.userid === isAuth?.userid);
     return (
       <SafeAreaView style={styles.mainDiv}>
         <View style={styles.haddiv}>
@@ -47,7 +46,7 @@ const ActivityScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.username}>
-          {isAuth.firstName} {isAuth.lastName}
+          {isAuth?.firstName} {isAuth?.lastName}
         </Text>
         {mydatashow.length > 0 ? (
           <FlatList
@@ -62,6 +61,9 @@ const ActivityScreen = ({ navigation }) => {
         )}
       </SafeAreaView>
     );
+  } else {
+    navigation.replace("Auth");
+    return null;
   }
 };
 

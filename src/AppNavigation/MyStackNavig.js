@@ -30,12 +30,16 @@ export default function MyStackNavig() {
       .onSnapshot((snapshot) => {
         dispatch(
           setUserActivity({
-            usersActivity: snapshot.docs.map((doc) => ({
-              id: doc.id,
-              createdAt: doc.data().createdAt,
-              userid: doc.data().userid,
-              activity: doc.data().activity,
-            })),
+            usersActivity: snapshot.docs
+              .map((doc) => ({
+                id: doc.id,
+                createdAt: doc.data().createdAt,
+                userid: doc.data().userid,
+                activity: doc.data().activity,
+              }))
+              .sort(
+                (a, b) => b.createdAt.substring(4) - b.createdAt.substring(4)
+              ),
           })
         );
       });

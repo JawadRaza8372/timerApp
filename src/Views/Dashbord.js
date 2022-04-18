@@ -23,6 +23,7 @@ const Dashbord = ({ navigation }) => {
   }, []);
   if (isAuth === null) {
     navigation.replace("Auth");
+    return null;
   } else {
     return (
       <SafeAreaView style={styles.mainDiv}>

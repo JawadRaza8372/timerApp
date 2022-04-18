@@ -72,6 +72,7 @@ const AuthScreen = ({ navigation }) => {
   const getAuthUser = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("timerAuth");
+      console.log("try", jsonValue);
       if (
         jsonValue !== null &&
         jsonValue !== undefined &&
@@ -80,7 +81,8 @@ const AuthScreen = ({ navigation }) => {
         jsonValue !== ""
       ) {
         var newdata = JSON.parse(jsonValue);
-        dispatch(setAuth({ isAuth: newdata }));
+        dispatch(setAuth({ auth: newdata }));
+        console.log("chekin", newdata);
       }
     } catch (e) {
       // error reading value
@@ -104,37 +106,29 @@ const AuthScreen = ({ navigation }) => {
               } else {
                 snapshot.forEach((doc) => {
                   if (doc.data().password === data?.password) {
+                    let valued = {
+                      userid: doc.id,
+                      email: doc.data().email,
+                      lastName: doc.data().lastName,
+                      firstName: doc.data().firstName,
+                      Role: doc.data().Role,
+                    };
                     dispatch(
                       setAuth({
-                        auth: {
-                          userid: doc.id,
-                          email: doc.data().email,
-                          lastName: doc.data().lastName,
-                          firstName: doc.data().firstName,
-                          Role: doc.data().Role,
-                        },
+                        auth: valued,
                       })
                     );
                     if (doc.data().Role === "Employe") {
                       navigation.replace("Client");
                     } else {
-                      if (isprom === true) {
-                        async () => {
-                          try {
-                            let value = {
-                              userid: doc.id,
-                              email: doc.data().email,
-                              lastName: doc.data().lastName,
-                              firstName: doc.data().firstName,
-                              Role: doc.data().Role,
-                            };
-                            const jsonValue = JSON.stringify(value);
-                            await AsyncStorage.setItem("timerAuth", jsonValue);
-                            navigation.replace("Admin");
-                          } catch (e) {
-                            // saving error
-                          }
-                        };
+                      if (isprom) {
+                        try {
+                          const jsonValue = JSON.stringify(valued);
+                          AsyncStorage.setItem("timerAuth", jsonValue);
+                          navigation.replace("Admin");
+                        } catch (e) {
+                          // saving error
+                        }
                       } else {
                         navigation.replace("Admin");
                       }
@@ -166,11 +160,11 @@ const AuthScreen = ({ navigation }) => {
                         },
                       })
                     );
-                    if (doc.data().Role === "Employe") {
-                      navigation.replace("Client");
-                    } else {
-                      navigation.replace("Admin");
-                    }
+                    // if (doc.data().Role === "Employe") {
+                    //   navigation.replace("Client");
+                    // } else {
+                    //   navigation.replace("Admin");
+                    // }
                   } else {
                     alert("Wrong Credientials");
                   }

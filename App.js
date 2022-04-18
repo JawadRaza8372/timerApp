@@ -12,6 +12,7 @@ export default function App() {
     "Setting a timer",
     "Can't perform a React state update on an unmounted component",
     "AsyncStorage has been extracted from react-native",
+    "Cannot update a component",
   ]);
 
   return (

@@ -52,7 +52,7 @@ const TaskSettings = ({ navigation }) => {
   };
   const logoutAdmin = async () => {
     await AsyncStorage.removeItem("timerAuth");
-    dispatch(setAuth({ isAuth: null }));
+    dispatch(setAuth({ auth: null }));
   };
   const storeData = async () => {
     try {
