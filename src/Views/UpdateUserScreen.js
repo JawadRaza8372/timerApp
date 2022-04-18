@@ -129,126 +129,130 @@ const UpdateUserScreen = ({ route, navigation }) => {
         alert("User Deleted Successfully.");
       });
   };
-  return (
-    <SafeAreaView style={styles.mainDiv}>
-      <View style={styles.introdiv}>
-        <Text style={styles.heading}>User Details</Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-            console.log("clicked");
-          }}
-          style={styles.backbtn}
-        >
-          <Entypo name="chevron-left" size={h("5%")} color="black" />
-        </TouchableOpacity>
-      </View>
-      {formData.Role &&
-      formData.email &&
-      formData.email &&
-      formData.firstName &&
-      formData.lastName &&
-      formData.password ? (
-        <KeyboardAwareScrollView>
-          <View style={styles.inputs}>
-            <View>
-              <Text style={styles.labl}>Role</Text>
+  if (isAuth === null) {
+    navigation.replace("Auth");
+  } else {
+    return (
+      <SafeAreaView style={styles.mainDiv}>
+        <View style={styles.introdiv}>
+          <Text style={styles.heading}>User Details</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+              console.log("clicked");
+            }}
+            style={styles.backbtn}
+          >
+            <Entypo name="chevron-left" size={h("5%")} color="black" />
+          </TouchableOpacity>
+        </View>
+        {formData.Role &&
+        formData.email &&
+        formData.email &&
+        formData.firstName &&
+        formData.lastName &&
+        formData.password ? (
+          <KeyboardAwareScrollView>
+            <View style={styles.inputs}>
+              <View>
+                <Text style={styles.labl}>Role</Text>
 
-              <CustomLoginUser
-                title={formData.Role}
-                myData={[
-                  { title: "Admin (Manager)", value: "Admin (Manager)" },
-                  { title: "Employe", value: "Employe" },
-                ]}
-                selectionFun={(dat) =>
-                  setformData((prevalue) => {
-                    return {
-                      ...prevalue,
-                      Role: dat,
-                    };
-                  })
-                }
+                <CustomLoginUser
+                  title={formData.Role}
+                  myData={[
+                    { title: "Admin (Manager)", value: "Admin (Manager)" },
+                    { title: "Employe", value: "Employe" },
+                  ]}
+                  selectionFun={(dat) =>
+                    setformData((prevalue) => {
+                      return {
+                        ...prevalue,
+                        Role: dat,
+                      };
+                    })
+                  }
+                />
+              </View>
+              <View>
+                <Text style={styles.labl}>Last Name</Text>
+
+                <CustomInput
+                  placeholder={"Doe"}
+                  value={formData.lastName}
+                  onChange={(text) =>
+                    setformData((prevalue) => {
+                      return {
+                        ...prevalue,
+                        lastName: text,
+                      };
+                    })
+                  }
+                />
+              </View>
+              <View>
+                <Text style={styles.labl}>First Name</Text>
+
+                <CustomInput
+                  placeholder={"Jhon"}
+                  value={formData.firstName}
+                  onChange={(text) =>
+                    setformData((prevalue) => {
+                      return {
+                        ...prevalue,
+                        firstName: text,
+                      };
+                    })
+                  }
+                />
+              </View>
+              <View>
+                <Text style={styles.labl}>Email</Text>
+
+                <CustomInput
+                  placeholder={"email@exapmle.com"}
+                  value={formData.email}
+                  onChange={(text) =>
+                    setformData((prevalue) => {
+                      return {
+                        ...prevalue,
+                        email: text,
+                      };
+                    })
+                  }
+                />
+              </View>
+              <View>
+                <Text style={styles.labl}>Password</Text>
+
+                <CustomPaswdInput
+                  value={formData.password}
+                  onChange={(text) =>
+                    setformData((prevalue) => {
+                      return {
+                        ...prevalue,
+                        password: text,
+                      };
+                    })
+                  }
+                  keyboardType="numeric"
+                  maxLength={5}
+                />
+              </View>
+
+              <CustomAuthBtn title="Update" onClick={updateFunct} />
+              <CustomAuthBtn
+                bgColor={stopColor}
+                title="Delete"
+                onClick={deltFunc}
               />
             </View>
-            <View>
-              <Text style={styles.labl}>Last Name</Text>
-
-              <CustomInput
-                placeholder={"Doe"}
-                value={formData.lastName}
-                onChange={(text) =>
-                  setformData((prevalue) => {
-                    return {
-                      ...prevalue,
-                      lastName: text,
-                    };
-                  })
-                }
-              />
-            </View>
-            <View>
-              <Text style={styles.labl}>First Name</Text>
-
-              <CustomInput
-                placeholder={"Jhon"}
-                value={formData.firstName}
-                onChange={(text) =>
-                  setformData((prevalue) => {
-                    return {
-                      ...prevalue,
-                      firstName: text,
-                    };
-                  })
-                }
-              />
-            </View>
-            <View>
-              <Text style={styles.labl}>Email</Text>
-
-              <CustomInput
-                placeholder={"email@exapmle.com"}
-                value={formData.email}
-                onChange={(text) =>
-                  setformData((prevalue) => {
-                    return {
-                      ...prevalue,
-                      email: text,
-                    };
-                  })
-                }
-              />
-            </View>
-            <View>
-              <Text style={styles.labl}>Password</Text>
-
-              <CustomPaswdInput
-                value={formData.password}
-                onChange={(text) =>
-                  setformData((prevalue) => {
-                    return {
-                      ...prevalue,
-                      password: text,
-                    };
-                  })
-                }
-                keyboardType="numeric"
-                maxLength={5}
-              />
-            </View>
-
-            <CustomAuthBtn title="Update" onClick={updateFunct} />
-            <CustomAuthBtn
-              bgColor={stopColor}
-              title="Delete"
-              onClick={deltFunc}
-            />
-          </View>
-        </KeyboardAwareScrollView>
-      ) : (
-        <LoadingData />
-      )}
-    </SafeAreaView>
-  );
+          </KeyboardAwareScrollView>
+        ) : (
+          <LoadingData />
+        )}
+      </SafeAreaView>
+    );
+  }
 };
 
 export default UpdateUserScreen;

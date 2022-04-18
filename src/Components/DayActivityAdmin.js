@@ -76,19 +76,20 @@ const DayActivityAdmin = ({ date, activityArry, docid }) => {
             </View>
           )}
         </View>
-        {activityArry.length >= 2 && (
-          <View style={styles.txtcont}>
-            <Text style={styles.sechead}>Today’s total working time</Text>
-            <Text style={styles.firhead}>
-              {actTime.hours === 0
-                ? ""
-                : actTime.hours === 1
-                ? `${actTime.hours} Hour `
-                : `${actTime.hours} Hours `}
-              {actTime.mints === 0 ? "" : `${actTime.mints} minutes`}
-            </Text>
-          </View>
-        )}
+        {activityArry.length >= 2 &&
+          (actTime.hours !== 0 || actTime.mints !== 0) && (
+            <View style={styles.txtcont}>
+              <Text style={styles.sechead}>Today’s total working time</Text>
+              <Text style={styles.firhead}>
+                {actTime.hours === 0
+                  ? ""
+                  : actTime.hours === 1
+                  ? `${actTime.hours} Hour `
+                  : `${actTime.hours} Hours `}
+                {actTime.mints === 0 ? "" : `${actTime.mints} minutes`}
+              </Text>
+            </View>
+          )}
       </View>
       <CustomModel show={openModel} toggleModal={toggleModel}>
         <View style={styles.modelDiv}>

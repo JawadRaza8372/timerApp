@@ -27,10 +27,13 @@ const EmployLogin = ({ onSubmit, onOther }) => {
   useEffect(() => {
     if (formSubmit.password && formSubmit.username) {
       if (formSubmit.password.length === 5) {
-        onSubmit({
-          email: formSubmit.username,
-          password: formSubmit.password,
-        });
+        onSubmit(
+          {
+            email: formSubmit.username,
+            password: formSubmit.password,
+          },
+          false
+        );
       }
     }
   }, [formSubmit]);

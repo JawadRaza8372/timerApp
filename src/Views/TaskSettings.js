@@ -12,7 +12,11 @@ import React, { useState, useEffect } from "react";
 import { w, h } from "react-native-responsiveness";
 import { inputBg, screenBg, mainColor } from "../AppColors";
 import CustomInput from "../Components/CustomInput";
-import { Entypo } from "@expo/vector-icons";
+import {
+  Entypo,
+  SimpleLineIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import CustomModel from "../Components/CustomModel";
 import CustomAuthBtn from "../Components/CustomAuthBtn";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
@@ -22,10 +26,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTasks, setLayout } from "../store/projectSlice";
 import { db } from "../DataBase/Configer";
 import { LoadingData } from "../Components/UnAvilData";
+import { setAuth } from "../store/authSlice";
 const TaskSettings = ({ navigation }) => {
   const [openModel, setopenModel] = useState(false);
-  const [isRemember, setisRemember] = useState(false);
+  const [taskId, settaskId] = useState("");
   const [lloginLayout, setlloginLayout] = useState("");
+  const [editTask, seteditTask] = useState("");
   const { users, tasks, layout } = useSelector((state) => state.project);
   const { isAuth } = useSelector((state) => state.auth);
   const [taskAdd, settaskAdd] = useState("");
@@ -43,6 +49,10 @@ const TaskSettings = ({ navigation }) => {
     } catch (e) {
       // error reading value
     }
+  };
+  const logoutAdmin = async () => {
+    await AsyncStorage.removeItem("timerAuth");
+    dispatch(setAuth({ isAuth: null }));
   };
   const storeData = async () => {
     try {
@@ -87,128 +97,148 @@ const TaskSettings = ({ navigation }) => {
       alert("Please enter task name of atleast 3 letters");
     }
   };
-  return (
-    <>
-      <SafeAreaView style={styles.mainDiv}>
-        <Text style={styles.heading}>Parameters</Text>
-        <KeyboardAwareScrollView>
-          <View style={styles.filldiv}>
-            <View style={styles.inputs}>
-              <Text style={styles.litheadig}>Tasks</Text>
-              <View style={styles.tasksCont}>
-                <ScrollView>
-                  {tasks.length > 0 ? (
-                    tasks.map((dat) => (
+  const editTaskFunct = async () => {
+    await db
+      .collection("TaskMange")
+      .doc(taskId)
+      .update({ Title: editTask })
+      .then(() => {
+        toggleModelf();
+        alert("Task Updated");
+      });
+  };
+  if (!isAuth) {
+    navigation.replace("Auth");
+    return null;
+  } else {
+    return (
+      <>
+        <SafeAreaView style={styles.mainDiv}>
+          <View style={styles.introdiv}>
+            <Text style={styles.heading}>Parameters</Text>
+            <TouchableOpacity onPress={logoutAdmin} style={styles.backbtn}>
+              <MaterialCommunityIcons
+                name="logout"
+                size={h("5%")}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+          <KeyboardAwareScrollView>
+            <View style={styles.filldiv}>
+              <View style={styles.inputs}>
+                <Text style={styles.litheadig}>Tasks</Text>
+                <View style={styles.tasksCont}>
+                  <ScrollView>
+                    {tasks.length > 0 ? (
+                      tasks.map((dat) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            seteditTask(dat.title);
+                            settaskId(dat.id);
+                            toggleModelf();
+                          }}
+                          style={styles.tasks}
+                          key={dat.id}
+                        >
+                          <Text>{dat.title}</Text>
+                        </TouchableOpacity>
+                      ))
+                    ) : (
+                      <LoadingData />
+                    )}
+
+                    <View style={styles.addtasks}>
+                      <TextInput
+                        placeholder="Enter New Task"
+                        style={styles.myinput}
+                        value={taskAdd}
+                        onChangeText={(text) => settaskAdd(text)}
+                      />
                       <TouchableOpacity
-                        onPress={toggleModelf}
-                        style={styles.tasks}
-                        key={dat.id}
+                        onPress={addTaskFunction}
+                        style={styles.addbtnn}
                       >
-                        <Text>{dat.title}</Text>
+                        <Entypo name="plus" size={24} color="black" />
                       </TouchableOpacity>
-                    ))
-                  ) : (
-                    <LoadingData />
-                  )}
+                    </View>
+                  </ScrollView>
+                </View>
+                <View>
+                  <Text style={styles.litheadig}>Email</Text>
 
-                  <View style={styles.addtasks}>
-                    <TextInput
-                      placeholder="Enter New Task"
-                      style={styles.myinput}
-                      value={taskAdd}
-                      onChangeText={(text) => settaskAdd(text)}
-                    />
-                    <TouchableOpacity
-                      onPress={addTaskFunction}
-                      style={styles.addbtnn}
-                    >
-                      <Entypo name="plus" size={24} color="black" />
-                    </TouchableOpacity>
-                  </View>
-                </ScrollView>
-              </View>
-              <View>
-                <Text style={styles.litheadig}>Email</Text>
-
-                <CustomInput
-                  placeholder="email@example.com"
-                  value={isAuth.email}
-                />
-              </View>
-              <View>
-                <Text style={styles.litheadig}>Login Type</Text>
-                <CustomLoginUser
-                  title={lloginLayout === "" ? "Default" : "Kiosk"}
-                  myData={[
-                    { title: "Default", value: "" },
-                    { title: "Kiosk", value: "Kiosk" },
-                  ]}
-                  selectionFun={(dat) => setlloginLayout(dat)}
-                />
-              </View>
-            </View>
-            {isAuth.Role === "Admin (Manager)" && (
-              <View style={styles.subscriptiondiv}>
-                <Text style={styles.litheadig}>
-                  Informations about your subscription
-                </Text>
-                <View style={styles.contentDiv}>
-                  <View style={{ width: "100%" }}>
-                    <View style={styles.tasks}>
-                      <Text>Your subscription is active</Text>
-                    </View>
-                    <View style={styles.tasks}>
-                      <Text>Number of users : {`${users.length}`}/10</Text>
-                    </View>
-                    <View style={styles.tasks}>
-                      <Text>Your role : {`${isAuth.Role}`}</Text>
-                    </View>
-                  </View>
-                  <CustomAuthBtn
-                    title={"Change Subscription"}
-                    onClick={() => navigation.navigate("Subscription")}
+                  <CustomInput
+                    placeholder="email@example.com"
+                    value={isAuth ? isAuth.email : ""}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.litheadig}>Login Type</Text>
+                  <CustomLoginUser
+                    title={lloginLayout === "" ? "Default" : "Kiosk"}
+                    myData={[
+                      { title: "Default", value: "" },
+                      { title: "Kiosk", value: "Kiosk" },
+                    ]}
+                    selectionFun={(dat) => setlloginLayout(dat)}
                   />
                 </View>
               </View>
-            )}
-          </View>
-        </KeyboardAwareScrollView>
-      </SafeAreaView>
-      <CustomModel show={openModel} toggleModal={toggleModelf}>
-        <View style={styles.modelDiv}>
-          <View style={styles.introdiv}>
-            <Text style={styles.heading}>Task Parameters</Text>
-            <TouchableOpacity onPress={toggleModelf} style={styles.backbtn}>
-              <Entypo name="chevron-left" size={h("5%")} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text style={styles.litheadig}>Task</Text>
+              {isAuth !== null && isAuth?.Role === "Admin (Manager)" && (
+                <View style={styles.subscriptiondiv}>
+                  <Text style={styles.litheadig}>
+                    Informations about your subscription
+                  </Text>
+                  <View style={styles.contentDiv}>
+                    <View style={{ width: "100%" }}>
+                      <View style={styles.tasks}>
+                        <Text>Your subscription is active</Text>
+                      </View>
+                      <View style={styles.tasks}>
+                        <Text>Number of users : {`${users.length}`}/10</Text>
+                      </View>
+                      <View style={styles.tasks}>
+                        <Text>
+                          Your role : {isAuth ? `${isAuth.Role}` : ""}
+                        </Text>
+                      </View>
+                    </View>
+                    <CustomAuthBtn
+                      title={"Change Subscription"}
+                      onClick={() => navigation.navigate("Subscription")}
+                    />
+                  </View>
+                </View>
+              )}
+            </View>
+          </KeyboardAwareScrollView>
+        </SafeAreaView>
+        <CustomModel show={openModel} toggleModal={toggleModelf}>
+          <View style={styles.modelDiv}>
+            <View style={styles.introdiv}>
+              <Text style={styles.heading}>Task Parameters</Text>
+              <TouchableOpacity onPress={toggleModelf} style={styles.backbtn}>
+                <Entypo name="chevron-left" size={h("5%")} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <Text style={styles.litheadig}>Task</Text>
 
-            <CustomInput placeholder={"Working"} />
-          </View>
-          <View style={styles.btnsDiv}>
-            <TouchableOpacity
-              style={styles.remberbtn}
-              onPress={() => setisRemember(!isRemember)}
-            >
-              <View
-                style={
-                  isRemember
-                    ? [styles.emptybox, styles.active]
-                    : styles.emptybox
-                }
+              <CustomInput
+                placeholder={"Task Name"}
+                value={editTask}
+                onChange={(text) => seteditTask(text)}
               />
-              <Text>is Working</Text>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.btnsDiv} />
           </View>
-        </View>
-        <View style={styles.btndiv}>
-          <CustomAuthBtn title="Update" />
-        </View>
-      </CustomModel>
-    </>
-  );
+          <View style={styles.btndiv}>
+            <CustomAuthBtn title="Update" onClick={editTaskFunct} />
+          </View>
+        </CustomModel>
+      </>
+    );
+  }
 };
 
 export default TaskSettings;
@@ -314,7 +344,7 @@ const styles = StyleSheet.create({
   },
   introdiv: {
     width: "95%",
-    height: "15%",
+    height: "10%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

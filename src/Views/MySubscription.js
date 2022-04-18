@@ -78,49 +78,53 @@ const MySubscription = ({ navigation }) => {
         }
       }
     } catch (e) {
-      alert(`error ${e}`);
+      alert(`${e.message}`);
     }
     //3.Confirm the payment with the card details
   };
   const onPressFun = (data) => {
     setselectedPlan(data);
   };
-  return (
-    <StripeProvider publishableKey="pk_test_51KohzCSGXTS5PtLwr6d0UhXOAqtXcJa7qlMZS8F9gEeLUse7SvB3rDufuD87IyTJF52jhnt69xx2bvL2Dyl0LHlT00b8eS3eEB">
-      <SafeAreaView style={styles.container}>
-        <View style={styles.flexwrapdiv}>
-          <Plans
-            value={selectedPlan.title}
-            title={"Basic Plan"}
-            usercapcity={10}
-            price={10}
-            onClick={onPressFun}
-          />
-          <Plans
-            value={selectedPlan.title}
-            title={"Super Plan"}
-            usercapcity={30}
-            price={25}
-            onClick={onPressFun}
-          />
-        </View>
-        <View style={styles.inputscont}>
-          <CardField
-            postalCodeEnabled={false}
-            placeholder={{
-              number: "4242 4242 4242 4242",
-            }}
-            cardStyle={styles.card}
-            style={styles.cardContainer}
-            onCardChange={(cardDetails) => {
-              setCardDetails(cardDetails);
-            }}
-          />
-          <CustomAuthBtn title={"Buy"} onClick={handlePayPress} />
-        </View>
-      </SafeAreaView>
-    </StripeProvider>
-  );
+  if (isAuth === null) {
+    navigation.replace("Auth");
+  } else {
+    return (
+      <StripeProvider publishableKey="pk_test_51KohzCSGXTS5PtLwr6d0UhXOAqtXcJa7qlMZS8F9gEeLUse7SvB3rDufuD87IyTJF52jhnt69xx2bvL2Dyl0LHlT00b8eS3eEB">
+        <SafeAreaView style={styles.container}>
+          <View style={styles.flexwrapdiv}>
+            <Plans
+              value={selectedPlan.title}
+              title={"Basic Plan"}
+              usercapcity={10}
+              price={10}
+              onClick={onPressFun}
+            />
+            <Plans
+              value={selectedPlan.title}
+              title={"Super Plan"}
+              usercapcity={30}
+              price={25}
+              onClick={onPressFun}
+            />
+          </View>
+          <View style={styles.inputscont}>
+            <CardField
+              postalCodeEnabled={false}
+              placeholder={{
+                number: "4242 4242 4242 4242",
+              }}
+              cardStyle={styles.card}
+              style={styles.cardContainer}
+              onCardChange={(cardDetails) => {
+                setCardDetails(cardDetails);
+              }}
+            />
+            <CustomAuthBtn title={"Buy"} onClick={handlePayPress} />
+          </View>
+        </SafeAreaView>
+      </StripeProvider>
+    );
+  }
 };
 export default MySubscription;
 const styles = StyleSheet.create({

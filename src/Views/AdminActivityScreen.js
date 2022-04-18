@@ -26,54 +26,58 @@ const AdminActivityScreen = ({ route, navigation }) => {
     }
   }, []);
   var mydataShow = usersActivity.filter((dat) => dat.userid === userid);
-  return (
-    <SafeAreaView style={styles.mainDiv}>
-      <View style={styles.headingdiv}>
-        <Text style={styles.heading}>Activity</Text>
+  if (isAuth === null) {
+    navigation.replace("Auth");
+  } else {
+    return (
+      <SafeAreaView style={styles.mainDiv}>
+        <View style={styles.headingdiv}>
+          <Text style={styles.heading}>Activity</Text>
 
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-            console.log("clicked");
-          }}
-          style={styles.backbtn}
-        >
-          <Entypo name="chevron-left" size={h("5%")} color="black" />
-        </TouchableOpacity>
-      </View>
-      {curentUser.length > 0 ? (
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("UpdateUserAdmin", { userid: userid })
-          }
-        >
-          <Text style={styles.username}>{curentUser[0].value}</Text>
-        </TouchableOpacity>
-      ) : (
-        <LoadingData />
-      )}
-
-      {usersActivity ? (
-        mydataShow.length > 0 ? (
-          <FlatList
-            data={mydataShow}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <DayActivityAdmin
-                date={item.createdAt}
-                docid={item.id}
-                activityArry={item.activity}
-              />
-            )}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+              console.log("clicked");
+            }}
+            style={styles.backbtn}
+          >
+            <Entypo name="chevron-left" size={h("5%")} color="black" />
+          </TouchableOpacity>
+        </View>
+        {curentUser.length > 0 ? (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("UpdateUserAdmin", { userid: userid })
+            }
+          >
+            <Text style={styles.username}>{curentUser[0].value}</Text>
+          </TouchableOpacity>
         ) : (
-          <UnAvilData />
-        )
-      ) : (
-        <LoadingData />
-      )}
-    </SafeAreaView>
-  );
+          <LoadingData />
+        )}
+
+        {usersActivity ? (
+          mydataShow.length > 0 ? (
+            <FlatList
+              data={mydataShow}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <DayActivityAdmin
+                  date={item.createdAt}
+                  docid={item.id}
+                  activityArry={item.activity}
+                />
+              )}
+            />
+          ) : (
+            <UnAvilData />
+          )
+        ) : (
+          <LoadingData />
+        )}
+      </SafeAreaView>
+    );
+  }
 };
 
 export default AdminActivityScreen;

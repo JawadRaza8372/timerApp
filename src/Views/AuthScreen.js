@@ -25,7 +25,7 @@ const AuthScreen = ({ navigation }) => {
       .add({
         createdAt: new Date().toDateString(),
         activity: [],
-        userid: isAuth.userid,
+        userid: isAuth ? isAuth.userid : "",
       })
       .then((doc) => {
         console.log("document created");
@@ -34,7 +34,7 @@ const AuthScreen = ({ navigation }) => {
   };
   const checkForDoc = async () => {
     var todayval = new Date().toDateString();
-    if (isAuth.Role === "Employe") {
+    if (isAuth && isAuth.Role === "Employe") {
       const checkTodayDoc = usersActivity.filter(
         (dat) => dat.userid === isAuth.userid && dat.createdAt === todayval
       );
@@ -69,11 +69,29 @@ const AuthScreen = ({ navigation }) => {
       // error reading value
     }
   };
+  const getAuthUser = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("timerAuth");
+      if (
+        jsonValue !== null &&
+        jsonValue !== undefined &&
+        jsonValue !== "null" &&
+        jsonValue !== "undefined" &&
+        jsonValue !== ""
+      ) {
+        var newdata = JSON.parse(jsonValue);
+        dispatch(setAuth({ isAuth: newdata }));
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
   useEffect(() => {
+    getAuthUser();
     getData();
     getEmployLoginData();
   }, []);
-  const loginFunct = async (data) => {
+  const loginFunct = async (data, isprom) => {
     if (data.email && data.password) {
       if (data.email.length >= 5) {
         if (data.password.length >= 5) {
@@ -100,7 +118,26 @@ const AuthScreen = ({ navigation }) => {
                     if (doc.data().Role === "Employe") {
                       navigation.replace("Client");
                     } else {
-                      navigation.replace("Admin");
+                      if (isprom === true) {
+                        async () => {
+                          try {
+                            let value = {
+                              userid: doc.id,
+                              email: doc.data().email,
+                              lastName: doc.data().lastName,
+                              firstName: doc.data().firstName,
+                              Role: doc.data().Role,
+                            };
+                            const jsonValue = JSON.stringify(value);
+                            await AsyncStorage.setItem("timerAuth", jsonValue);
+                            navigation.replace("Admin");
+                          } catch (e) {
+                            // saving error
+                          }
+                        };
+                      } else {
+                        navigation.replace("Admin");
+                      }
                     }
                   } else {
                     alert("Wrong Credientials");
@@ -171,8 +208,17 @@ const AuthScreen = ({ navigation }) => {
       return <AdminLogin onSubmit={loginFunct} />;
     }
   };
-
-  return <SafeAreaView style={styles.mainDiv}>{renderlayout()}</SafeAreaView>;
+  if (isAuth !== null && isAuth) {
+    if (isAuth.Role === "Employe") {
+      navigation.replace("Client");
+      return null;
+    } else {
+      navigation.replace("Admin");
+      return null;
+    }
+  } else {
+    return <SafeAreaView style={styles.mainDiv}>{renderlayout()}</SafeAreaView>;
+  }
 };
 
 export default AuthScreen;

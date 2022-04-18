@@ -114,102 +114,106 @@ const AddUserScreen = ({ navigation }) => {
   ];
   const role2 = [{ title: "Employe", value: "Employe" }];
   const usercateg = isAuth.Role === "Admin" ? role1 : role2;
-  return (
-    <SafeAreaView style={styles.mainDiv}>
-      <View style={styles.introdiv}>
-        <Text style={styles.heading}>New User</Text>
-        <Text style={styles.desc}>Fill in all the fields below</Text>
-      </View>
-      <KeyboardAwareScrollView>
-        <View style={styles.inputs}>
-          <View>
-            <Text style={styles.labl}>Role</Text>
-
-            <CustomLoginUser
-              title={formData.Role}
-              myData={usercateg}
-              selectionFun={(dat) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    Role: dat,
-                  };
-                })
-              }
-            />
-          </View>
-          <View>
-            <Text style={styles.labl}>Last Name</Text>
-
-            <CustomInput
-              placeholder="Doe"
-              value={formData.lastName}
-              onChange={(text) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    lastName: text,
-                  };
-                })
-              }
-            />
-          </View>
-          <View>
-            <Text style={styles.labl}>First Name</Text>
-
-            <CustomInput
-              placeholder="Jhon"
-              value={formData.firstName}
-              onChange={(text) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    firstName: text,
-                  };
-                })
-              }
-            />
-          </View>
-          <View>
-            <Text style={styles.labl}>Email</Text>
-
-            <CustomInput
-              placeholder="email@example.com"
-              value={formData.email}
-              onChange={(text) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    email: text,
-                  };
-                })
-              }
-            />
-          </View>
-
-          <View>
-            <Text style={styles.labl}>Password</Text>
-
-            <CustomPaswdInput
-              value={formData.password}
-              onChange={(text) =>
-                setformData((prevalue) => {
-                  return {
-                    ...prevalue,
-                    password: text,
-                  };
-                })
-              }
-              keyboardType="numeric"
-              maxLength={5}
-            />
-          </View>
-
-          <CustomAuthBtn title="Add" onClick={adduserfun} />
+  if (isAuth === null) {
+    navigation.replace("Auth");
+  } else {
+    return (
+      <SafeAreaView style={styles.mainDiv}>
+        <View style={styles.introdiv}>
+          <Text style={styles.heading}>New User</Text>
+          <Text style={styles.desc}>Fill in all the fields below</Text>
         </View>
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
-  );
+        <KeyboardAwareScrollView>
+          <View style={styles.inputs}>
+            <View>
+              <Text style={styles.labl}>Role</Text>
+
+              <CustomLoginUser
+                title={formData.Role}
+                myData={usercateg}
+                selectionFun={(dat) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      Role: dat,
+                    };
+                  })
+                }
+              />
+            </View>
+            <View>
+              <Text style={styles.labl}>Last Name</Text>
+
+              <CustomInput
+                placeholder="Doe"
+                value={formData.lastName}
+                onChange={(text) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      lastName: text,
+                    };
+                  })
+                }
+              />
+            </View>
+            <View>
+              <Text style={styles.labl}>First Name</Text>
+
+              <CustomInput
+                placeholder="Jhon"
+                value={formData.firstName}
+                onChange={(text) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      firstName: text,
+                    };
+                  })
+                }
+              />
+            </View>
+            <View>
+              <Text style={styles.labl}>Email</Text>
+
+              <CustomInput
+                placeholder="email@example.com"
+                value={formData.email}
+                onChange={(text) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      email: text,
+                    };
+                  })
+                }
+              />
+            </View>
+
+            <View>
+              <Text style={styles.labl}>Password</Text>
+
+              <CustomPaswdInput
+                value={formData.password}
+                onChange={(text) =>
+                  setformData((prevalue) => {
+                    return {
+                      ...prevalue,
+                      password: text,
+                    };
+                  })
+                }
+                keyboardType="numeric"
+                maxLength={5}
+              />
+            </View>
+
+            <CustomAuthBtn title="Add" onClick={adduserfun} />
+          </View>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
+    );
+  }
 };
 
 export default AddUserScreen;

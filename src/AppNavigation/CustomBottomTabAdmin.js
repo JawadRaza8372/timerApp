@@ -44,36 +44,25 @@ const CustomBottomTabAdmin = () => {
     if (isAuth) {
       db.collection("authSystem")
         .where("addBy", "==", `${isAuth.userid}`)
-        .get()
-        .then((querySnapshot) => {
-          if (querySnapshot.empty) {
-            console.log("no users created by this user");
-          } else {
-            dispatch(
-              setUsers({
-                users: querySnapshot.docs.map((doc) => ({
-                  userid: doc.id,
-                  value: doc.data().email,
-                  title: doc.data().firstName + " " + doc.data().lastName,
-                  Role: doc.data().Role,
-                })),
-              })
-            );
-            storeData(
-              querySnapshot.docs.map((doc) => ({
+        .onSnapshot((snapshot) => {
+          dispatch(
+            setUsers({
+              users: snapshot.docs.map((doc) => ({
                 userid: doc.id,
                 value: doc.data().email,
                 title: doc.data().firstName + " " + doc.data().lastName,
                 Role: doc.data().Role,
-              }))
-            );
-            // querySnapshot.forEach((doc) => {
-            //   console.log(doc.id);
-            // });
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting documents: ", error);
+              })),
+            })
+          );
+          storeData(
+            snapshot.docs.map((doc) => ({
+              userid: doc.id,
+              value: doc.data().email,
+              title: doc.data().firstName + " " + doc.data().lastName,
+              Role: doc.data().Role,
+            }))
+          );
         });
     }
   }, []);

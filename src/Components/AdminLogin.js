@@ -17,7 +17,7 @@ const AdminLogin = ({ onSubmit }) => {
   const [formSubmit, setformSubmit] = useState({ email: "", password: "" });
   const submission = () => {
     if (formSubmit.email && formSubmit.password) {
-      onSubmit(formSubmit);
+      onSubmit(formSubmit, isRemember);
     } else {
       alert("Please Fill All the Fields.");
     }

@@ -21,38 +21,41 @@ const Dashbord = ({ navigation }) => {
       navigation.replace("Auth");
     }
   }, []);
-
-  return (
-    <SafeAreaView style={styles.mainDiv}>
-      <Text style={styles.heading}>Dashbord</Text>
-      <View style={styles.filldiv}>
-        <View style={styles.contentShow}>
-          {users.length > 0 ? (
-            <FlatList
-              data={users}
-              keyExtractor={(item) => item.userid}
-              renderItem={({ item }) => (
-                <>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("adminActivity", {
-                        userid: item.userid,
-                      })
-                    }
-                    style={styles.usermain}
-                  >
-                    <Text>{item.value}</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            />
-          ) : (
-            <LoadingData />
-          )}
+  if (isAuth === null) {
+    navigation.replace("Auth");
+  } else {
+    return (
+      <SafeAreaView style={styles.mainDiv}>
+        <Text style={styles.heading}>Dashbord</Text>
+        <View style={styles.filldiv}>
+          <View style={styles.contentShow}>
+            {users.length > 0 ? (
+              <FlatList
+                data={users}
+                keyExtractor={(item) => item.userid}
+                renderItem={({ item }) => (
+                  <>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("adminActivity", {
+                          userid: item.userid,
+                        })
+                      }
+                      style={styles.usermain}
+                    >
+                      <Text>{item.value}</Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              />
+            ) : (
+              <LoadingData />
+            )}
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 };
 
 export default Dashbord;
