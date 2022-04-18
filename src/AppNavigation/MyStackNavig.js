@@ -26,7 +26,7 @@ export default function MyStackNavig() {
       );
     });
     db.collection("DailyActivity")
-      .orderBy("createdAt", "desc")
+      .orderBy("created", "desc")
       .onSnapshot((snapshot) => {
         dispatch(
           setUserActivity({

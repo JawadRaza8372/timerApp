@@ -14,7 +14,6 @@ export default function App() {
     "AsyncStorage has been extracted from react-native",
     "Cannot update a component",
   ]);
-
   return (
     <Provider store={store}>
       <>

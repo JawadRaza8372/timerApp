@@ -26,6 +26,7 @@ const AuthScreen = ({ navigation }) => {
         createdAt: new Date().toDateString(),
         activity: [],
         userid: isAuth ? isAuth.userid : "",
+        created: new Date(),
       })
       .then((doc) => {
         console.log("document created");
