@@ -4,6 +4,7 @@ import { Feather } from "@expo/vector-icons";
 import { w, h } from "react-native-responsiveness";
 import { inputBg, mainColor } from "../AppColors";
 import { color } from "react-native-reanimated";
+import UnAvilData from "./UnAvilData";
 const DayActivity = ({ date, activityArry }) => {
   const [actTime, setactTime] = useState({ hours: 0, mints: 0 });
   useEffect(() => {
@@ -39,19 +40,7 @@ const DayActivity = ({ date, activityArry }) => {
             ))}
           </ScrollView>
         )}
-        {activityArry.length === 0 && (
-          <View
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={{ fontSize: h("3%") }}>No Data Available</Text>
-          </View>
-        )}
+        {activityArry.length === 0 && <UnAvilData />}
       </View>
       {activityArry.length >= 2 &&
         (actTime.hours !== 0 || actTime.mints !== 0) && (

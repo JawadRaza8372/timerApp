@@ -40,8 +40,8 @@ const ActivityScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.backbtn} onPress={logoutFun}>
             <MaterialCommunityIcons
               name="logout"
-              size={h("5%")}
-              color="black"
+              size={h("3.5%")}
+              color={mainColor}
             />
           </TouchableOpacity>
         </View>

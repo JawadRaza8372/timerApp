@@ -119,8 +119,8 @@ const TaskSettings = ({ navigation }) => {
             <TouchableOpacity onPress={logoutAdmin} style={styles.backbtn}>
               <MaterialCommunityIcons
                 name="logout"
-                size={h("5%")}
-                color="black"
+                size={h("3.5%")}
+                color={mainColor}
               />
             </TouchableOpacity>
           </View>
@@ -205,7 +205,7 @@ const TaskSettings = ({ navigation }) => {
                     </View>
                     <CustomAuthBtn
                       title={"Change Subscription"}
-                      onClick={() => navigation.navigate("Subscription")}
+                      onClick={() => console.log("subscrip")}
                     />
                   </View>
                 </View>

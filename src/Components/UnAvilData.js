@@ -5,7 +5,7 @@ import { inputBg } from "../AppColors";
 const UnAvilData = () => {
   return (
     <View style={styles.nofounddiv}>
-      <Text style={styles.heading}>Data is not available</Text>
+      <Text style={styles.heading}>No Data Found.</Text>
     </View>
   );
 };

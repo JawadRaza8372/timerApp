@@ -17,6 +17,7 @@ import AnimatedTimeComp from "./AnimatedTimeComp";
 import CustomInput from "./CustomInput";
 import CustomAuthBtn from "./CustomAuthBtn";
 import AdminActivityAdmin from "./AdminActivityAdmin";
+import UnAvilData from "./UnAvilData";
 const DayActivityAdmin = ({ date, activityArry, docid }) => {
   const [openModel, setopenModel] = useState(false);
   const [actTime, setactTime] = useState({ hours: 0, mints: 0 });
@@ -62,19 +63,7 @@ const DayActivityAdmin = ({ date, activityArry, docid }) => {
             </ScrollView>
           )}
 
-          {activityArry.length === 0 && (
-            <View
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ fontSize: h("3%") }}>No Data Available</Text>
-            </View>
-          )}
+          {activityArry.length === 0 && <UnAvilData />}
         </View>
         {activityArry.length >= 2 &&
           (actTime.hours !== 0 || actTime.mints !== 0) && (

@@ -11,7 +11,7 @@ import { w, h } from "react-native-responsiveness";
 import { inputBg, mainColor, screenBg, stopColor } from "../AppColors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { LoadingData } from "../Components/UnAvilData";
+import UnAvilData, { LoadingData } from "../Components/UnAvilData";
 const Dashbord = ({ navigation }) => {
   const { users } = useSelector((state) => state.project);
 
@@ -50,7 +50,7 @@ const Dashbord = ({ navigation }) => {
                 )}
               />
             ) : (
-              <LoadingData />
+              <UnAvilData />
             )}
           </View>
         </View>
