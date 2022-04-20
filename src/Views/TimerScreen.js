@@ -21,6 +21,7 @@ const TimerScreen = ({ navigation }) => {
     taskTime: "",
   });
   const { tasks, todayActivity } = useSelector((state) => state.project);
+  const newTask = tasks && tasks.filter((dat) => dat.isShow === true);
   const [todayTime, settodayTime] = useState({ hours: 0, mints: 0 });
   const { isAuth } = useSelector((state) => state.auth);
   const [fetchTodayDoc, setfetchTodayDoc] = useState({
@@ -165,7 +166,7 @@ const TimerScreen = ({ navigation }) => {
                   selectedTask ? selectedTask.replace("_", " ") : "Select Task"
                 }
                 istimer={true}
-                myData={tasks}
+                myData={newTask}
                 selectionFun={(dat) => setselectedTask(dat)}
               />
             </View>
@@ -220,7 +221,7 @@ const TimerScreen = ({ navigation }) => {
                     selectedTask ? selectedTask.replace("_", " ") : "Select One"
                   }
                   istimer={true}
-                  myData={tasks.filter((dat) => dat.value !== selectedTask)}
+                  myData={newTask.filter((dat) => dat.value !== selectedTask)}
                   selectionFun={(dat) => setselectedTask(dat)}
                 />
                 <CustomAuthBtn

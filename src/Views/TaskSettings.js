@@ -29,6 +29,7 @@ import { LoadingData } from "../Components/UnAvilData";
 import { setAuth } from "../store/authSlice";
 const TaskSettings = ({ navigation }) => {
   const [openModel, setopenModel] = useState(false);
+  const [isRemember, setisRemember] = useState(false);
   const [taskId, settaskId] = useState("");
   const [lloginLayout, setlloginLayout] = useState("");
   const [editTask, seteditTask] = useState("");
@@ -88,6 +89,7 @@ const TaskSettings = ({ navigation }) => {
         .add({
           Title: taskAdd.charAt(0).toUpperCase() + taskAdd.slice(1),
           Value: value,
+          isShow: true,
         })
         .then((doc) => {
           settaskAdd("");
@@ -101,7 +103,7 @@ const TaskSettings = ({ navigation }) => {
     await db
       .collection("TaskMange")
       .doc(taskId)
-      .update({ Title: editTask })
+      .update({ Title: editTask, isShow: isRemember })
       .then(() => {
         toggleModelf();
         alert("Task Updated");
@@ -135,6 +137,8 @@ const TaskSettings = ({ navigation }) => {
                         <TouchableOpacity
                           onPress={() => {
                             seteditTask(dat.title);
+                            setisRemember(dat.isShow);
+                            console.log(dat.isShow, typeof dat.isShow);
                             settaskId(dat.id);
                             toggleModelf();
                           }}
@@ -230,7 +234,21 @@ const TaskSettings = ({ navigation }) => {
                 onChange={(text) => seteditTask(text)}
               />
             </View>
-            <View style={styles.btnsDiv} />
+            <View style={styles.btnsDiv}>
+              <TouchableOpacity
+                style={styles.remberbtn}
+                onPress={() => setisRemember(!isRemember)}
+              >
+                <View
+                  style={
+                    isRemember
+                      ? [styles.emptybox, styles.active]
+                      : styles.emptybox
+                  }
+                />
+                <Text>is Working</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.btndiv}>
             <CustomAuthBtn title="Update" onClick={editTaskFunct} />

@@ -21,6 +21,7 @@ export default function MyStackNavig() {
             id: doc.id,
             title: doc.data().Title,
             value: doc.data().Value,
+            isShow: doc.data().isShow,
           })),
         })
       );
